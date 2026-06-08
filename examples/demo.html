@@ -4,73 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>save to meos — demo</title>
-    <link rel="stylesheet" href="../src/widget/fonts.css" />
-    <link rel="stylesheet" href="../src/widget/widget.css" />
-    <style>
-      :root {
-        color-scheme: light dark;
-        --meos-bg: #ffffff;
-        --meos-fg: #000000;
-      }
-
-      @media (prefers-color-scheme: dark) {
-        :root {
-          --meos-bg: #151515;
-          --meos-fg: #ffffff;
-        }
-      }
-
-      body {
-        font-family: var(--meos-font);
-        background: var(--meos-bg);
-        color: var(--meos-fg);
-        margin: 0;
-        padding: 2rem;
-        line-height: 1.6;
-      }
-
-      article {
-        max-width: 42rem;
-        margin: 0 auto;
-      }
-
-      h1 {
-        font-weight: 500;
-        font-size: 1.5rem;
-      }
-
-      .share-row {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 0.5rem;
-        margin-top: 1.5rem;
-      }
-
-      .share-row .fake-share {
-        display: inline-flex;
-        align-items: center;
-        height: 34px;
-        padding: 0 0.75rem;
-        font-family: var(--meos-font);
-        font-size: 12px;
-        border: 1px solid rgba(127, 127, 127, 0.35);
-        border-radius: var(--meos-radius);
-        background: transparent;
-        color: inherit;
-        opacity: 0.55;
-      }
-
-      .hint {
-        margin-top: 1rem;
-        font-size: 0.75rem;
-        opacity: 0.7;
-      }
-
-      #meos-save-mount {
-        display: inline-flex;
-      }
-    </style>
   </head>
   <body>
     <article>
@@ -89,18 +22,87 @@
         <span class="fake-share">copy link</span>
         <div id="meos-save-mount" data-testid="mdp-demo-save-btn"></div>
       </div>
-      <p class="hint">
-        Run <code>npm run build</code> before opening this file. The chip renders
-        via <code>initSaveButton</code> in a closed shadow root.
-      </p>
+      <p class="hint" id="demo-hint"></p>
     </article>
-    <script type="module">
-      import { initSaveButton } from "../dist/widget/index.js"
 
-      initSaveButton("#meos-save-mount", {
-        u: typeof location !== "undefined" ? location.href : "",
-        widgetId: "demo",
-      })
+    <script>
+      ;(function () {
+        /** Pin this when cutting a release — unpkg/jsDelivr index the npm tarball. */
+        var VERSION = "0.0.1"
+        var params = new URLSearchParams(location.search)
+        var local = params.has("local")
+
+        var fontsHref = local
+          ? "../src/widget/fonts.css"
+          : "https://unpkg.com/@meos/save-in-meos@" +
+            VERSION +
+            "/src/widget/fonts.css"
+
+        var link = document.createElement("link")
+        link.rel = "stylesheet"
+        link.href = fontsHref
+        document.head.appendChild(link)
+
+        var style = document.createElement("style")
+        style.textContent = [
+          ":root { color-scheme: light dark; --meos-bg: #fff; --meos-fg: #000; }",
+          "@media (prefers-color-scheme: dark) { :root { --meos-bg: #151515; --meos-fg: #fff; } }",
+          "body { font-family: var(--meos-font); background: var(--meos-bg); color: var(--meos-fg); margin: 0; padding: 2rem; line-height: 1.6; }",
+          "article { max-width: 42rem; margin: 0 auto; }",
+          "h1 { font-weight: 500; font-size: 1.5rem; }",
+          ".share-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-top: 1.5rem; }",
+          ".fake-share { display: inline-flex; align-items: center; height: 34px; padding: 0 0.75rem; font-family: var(--meos-font); font-size: 12px; border: 1px solid rgba(127,127,127,0.35); border-radius: var(--meos-radius); background: transparent; color: inherit; opacity: 0.55; }",
+          ".hint { margin-top: 1rem; font-size: 0.75rem; opacity: 0.7; }",
+          "#meos-save-mount { display: inline-flex; }",
+        ].join("\n")
+        document.head.appendChild(style)
+
+        function mount() {
+          MeosSave.initSaveButton("#meos-save-mount", {
+            u: location.href,
+            widgetId: "demo",
+          })
+        }
+
+        function setHint() {
+          var el = document.getElementById("demo-hint")
+          if (!el) return
+          if (local) {
+            el.innerHTML =
+              'Local mode (<code>?local=1</code>): loads <code>dist/widget.iife.js</code>. Run <code>npm run build:widget</code> first.'
+          } else {
+            el.innerHTML =
+              'Zero-build mode: loads <code>@' +
+              VERSION +
+              '</code> from unpkg. Append <code>?local=1</code> for local <code>dist/</code>. See <a href="cdn-demo.html">cdn-demo.html</a>.'
+          }
+        }
+
+        setHint()
+
+        if (local) {
+          var s = document.createElement("script")
+          s.src = "../dist/widget.iife.js"
+          s.onload = mount
+          s.onerror = function () {
+            alert("Run npm run build:widget before opening ?local=1")
+          }
+          document.body.appendChild(s)
+        } else {
+          var cdn = document.createElement("script")
+          cdn.src =
+            "https://unpkg.com/@meos/save-in-meos@" +
+            VERSION +
+            "/dist/widget.iife.js"
+          cdn.onload = mount
+          cdn.onerror = function () {
+            alert(
+              "CDN bundle not found yet — publish to npm or use ?local=1 after npm run build:widget",
+            )
+          }
+          document.body.appendChild(cdn)
+        }
+      })()
     </script>
   </body>
 </html>

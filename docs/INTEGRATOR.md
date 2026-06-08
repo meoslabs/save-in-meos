@@ -10,6 +10,17 @@ On desktop, users see the meos.do import preview (with QR). On mobile with the m
 
 ---
 
+## Choose your integration path
+
+| Use case | How |
+|----------|-----|
+| **npm / bundler** | `npm install @meos/save-in-meos` |
+| **Script tag (no build)** | Pin unpkg or jsDelivr URLs — [`examples/cdn-demo.html`](../examples/cdn-demo.html) |
+| **Programmatic only** | Import `buildMeosLink` / `buildImportIntentV1` — skip widget CSS |
+| **Try it** | Open [`examples/demo.html`](../examples/demo.html) (CDN) or `?local=1` after `npm run build:widget` |
+
+---
+
 ## Quick start (30 seconds)
 
 1. Open [`examples/demo.html`](../examples/demo.html) in a browser
@@ -45,30 +56,34 @@ The chip label is fixed at **save to meos** — there is no `label` option. Bran
 ```ts
 import {
   buildMeosLink,
+  buildImportIntentV1,
   decodeMeosLink,
-  encodeImportIntentV1,
-  type ImportIntentV1,
+  parseWidgetAttribution,
 } from "@meos/save-in-meos"
 
-const intent: ImportIntentV1 = {
-  v: 1,
-  tier: "LITE",
+const intent = buildImportIntentV1({
   u: "https://example.com/post",
   t: "A passage the reader selected",
-}
+})
 
 const url = buildMeosLink(intent, "my-widget")
 const restored = decodeMeosLink(url)
+const widgetId = parseWidgetAttribution(url)
 ```
 
 ---
 
-## Script tag (planned)
+## Script tag (CDN)
 
-A hosted IIFE bundle will be available at `https://getmeos.com/widget/v1.js`. Until then, bundle with `npm run build:widget` and self-host `dist/widget.iife.js`:
+No npm or bundler required. Pin the package version — never use `@latest` in production.
 
 ```html
-<script src="/path/to/widget.iife.js"></script>
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/@meos/save-in-meos@0.0.1/src/widget/fonts.css"
+/>
+<div id="meos-save-mount"></div>
+<script src="https://unpkg.com/@meos/save-in-meos@0.0.1/dist/widget.iife.js"></script>
 <script>
   MeosSave.initSaveButton("#meos-save-mount", {
     u: location.href,
@@ -76,6 +91,30 @@ A hosted IIFE bundle will be available at `https://getmeos.com/widget/v1.js`. Un
   })
 </script>
 ```
+
+**jsDelivr:**
+
+```
+https://cdn.jsdelivr.net/npm/@meos/save-in-meos@0.0.1/dist/widget.iife.js
+```
+
+**Alias:** `dist/save-in-meos.min.js` (same minified bundle).
+
+Widget chip styles are injected into a closed shadow root at runtime — you only need `fonts.css` for Inconsolata. If you compose chip markup yourself, also import `@meos/save-in-meos/widget.css` or `dist/widget.iife.css`.
+
+### `window.MeosSave` API (CDN global)
+
+| Member | Purpose |
+|--------|---------|
+| `initSaveButton` | Mount the branded chip |
+| `buildMeosLink` | Build import URL from intent |
+| `buildImportIntentV1` | Tier-pick intent from URL + optional quote/images |
+| `decodeMeosLink` | Parse import URL back to intent |
+| `parseWidgetAttribution` | Read `?w=` widget id |
+| `buildSaveChipMarkup` | HTML for manual composition |
+| `version` | Package semver baked into the bundle |
+
+Self-hosting: run `npm run build:widget` and serve `dist/widget.iife.js` from your origin.
 
 ---
 

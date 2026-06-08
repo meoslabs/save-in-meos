@@ -13,10 +13,13 @@
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "unpkg": "dist/widget.iife.js",
+  "jsdelivr": "dist/widget.iife.js",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
+      "require": "./dist/index.js",
       "default": "./dist/index.js"
     },
     "./fonts.css": "./src/widget/fonts.css",
@@ -25,10 +28,24 @@
       "types": "./dist/widget/index.d.ts",
       "import": "./dist/widget/index.js",
       "default": "./dist/widget/index.js"
-    }
+    },
+    "./browser": {
+      "default": "./dist/widget.iife.js"
+    },
+    "./widget.iife.js": "./dist/widget.iife.js",
+    "./save-in-meos.min.js": "./dist/save-in-meos.min.js",
+    "./widget.iife.css": "./dist/widget.iife.css"
   },
   "files": [
-    "dist/",
+    "dist/index.js",
+    "dist/index.d.ts",
+    "dist/import-intent-v1.js",
+    "dist/import-intent-v1.d.ts",
+    "dist/widget/",
+    "dist/widget.iife.js",
+    "dist/widget.iife.js.map",
+    "dist/widget.iife.css",
+    "dist/save-in-meos.min.js",
     "src/widget/fonts.css",
     "src/widget/widget.css",
     "assets/fonts/",
@@ -37,6 +54,7 @@
   ],
   "scripts": {
     "build": "tsc",
+    "build:widget": "tsx scripts/build-widget.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -44,9 +62,9 @@
     "check:widget-branding": "tsx scripts/check-widget-branding.ts",
     "check:mdp": "npm run check:mdp-contract && npm run check:widget-branding",
     "check:public-scrub": "tsx scripts/check-public-scrub.ts",
-    "prepublishOnly": "npm run build && npm run build:widget",
-    "prepare": "husky",
-    "build:widget": "esbuild src/widget/iife-entry.ts --bundle --format=iife --global-name=MeosSave --outfile=dist/widget.iife.js --platform=browser"
+    "check:ci": "tsx scripts/check-ci-workflows.ts",
+    "prepublishOnly": "npm run build && npm run build:widget && npm run check:mdp && npm run check:public-scrub",
+    "prepare": "husky"
   },
   "keywords": [
     "meos",

@@ -1,7 +1,7 @@
 /**
  * WHY: Public entry for @meos/save-in-meos — mdp codec + widget initialisers.
- * WHAT: Re-exports ImportIntentV1 types and codec functions.
- * WHERE: npm package root.
+ * WHAT: Re-exports ImportIntentV1 types, codec functions, and widget API.
+ * WHERE: npm package root (`import from '@meos/save-in-meos'`).
  */
 
 export {
@@ -10,9 +10,16 @@ export {
   DATABOX_IMPORT_RESOURCE,
   MDP_MAX_QR_URL_LENGTH,
   type ImportIntentTier,
+  type ImportIntentKind,
   type ImportIntentV1,
+  type ImportIntentInput,
+  type BuildMeosLinkOptions,
+  MdpEncodeError,
+  MdpDecodeError,
   encodeImportIntentV1,
   decodeImportIntentV1,
+  buildImportIntentV1,
+  selectImportTier,
   buildMeosLink,
   decodeMeosLink,
   parseWidgetAttribution,

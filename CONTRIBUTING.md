@@ -7,6 +7,7 @@ Thanks for helping maintain the public `@meos/save-in-meos` package.
 ```bash
 npm install
 npm run build
+npm run build:widget
 ```
 
 Pre-commit runs `check:mdp-contract`, `check:widget-branding`, and `typecheck`.
@@ -17,7 +18,10 @@ Pre-commit runs `check:mdp-contract`, `check:widget-branding`, and `typecheck`.
 npm test
 npm run check:mdp
 npm run check:public-scrub
+npm run check:ci
 ```
+
+CI (`.github/workflows/ci.yml`) runs the same gates on every PR.
 
 ## Public release scrub checklist
 
@@ -26,10 +30,12 @@ Run before making the repo public or publishing to npm:
 - [ ] `npm run check:public-scrub` — no agent paths, branch names, or secrets in docs
 - [ ] No agent playbooks or IDE workspace artefacts in the tree
 - [ ] README + INTEGRATOR aimed at external integrators, not internal waves
-- [ ] `package.json` has `repository`, `license`, and `files` whitelist
+- [ ] `package.json` has `repository`, `license`, and `files` whitelist (includes `widget.iife.js`)
 - [ ] `LICENSE` (MIT) + `assets/fonts/inconsolata/OFL.txt` present
-- [ ] `examples/demo.html` works without internal commentary
+- [ ] `examples/demo.html` works zero-build (unpkg) and with `?local=1` after `build:widget`
 - [ ] `npm run check:mdp` GREEN
+
+Publishing steps: [`docs/PUBLISHING.md`](docs/PUBLISHING.md).
 
 ## Cross-repo MDP ecosystem (meoslabs internal)
 
