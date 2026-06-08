@@ -26,7 +26,8 @@
     "check:mdp-contract": "tsx scripts/check-mdp-contract.ts",
     "check:widget-branding": "tsx scripts/check-widget-branding.ts",
     "check:mdp": "npm run check:mdp-contract && npm run check:widget-branding",
-    "prepare": "husky"
+    "prepare": "husky",
+    "build:widget": "esbuild src/widget/iife-entry.ts --bundle --format=iife --global-name=MeosSave --outfile=dist/widget.iife.js --platform=browser"
   },
   "keywords": [
     "meos",
@@ -43,6 +44,8 @@
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^22.15.0",
+    "@types/pako": "^2.0.4",
+    "esbuild": "^0.28.0",
     "husky": "^9.1.7",
     "tsx": "^4.19.4",
     "typescript": "^5.8.3",
@@ -50,5 +53,8 @@
   },
   "engines": {
     "node": ">=20"
+  },
+  "dependencies": {
+    "pako": "^2.1.0"
   }
 }
