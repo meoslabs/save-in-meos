@@ -83,6 +83,36 @@ No automation token. No GitHub secret. The workflow uses `id-token: write` + `np
 
 **Manual publish trigger** (after trusted publisher is set): Run workflow → `dry_run: false` on `main`.
 
+```bash
+gh workflow run release.yml --repo meoslabs/save-in-meos -f dry_run=false
+```
+
+### First publish failed with `E404 Not Found`?
+
+If CI logs show provenance signed but:
+
+```
+npm error 404 Not Found - PUT ... @meoslabs/save-in-meos - Not found
+```
+
+**Cause:** npm **Trusted Publisher** is not linked yet (OIDC auth worked; npm rejected the package create).
+
+**Fix:**
+
+1. Complete the [one-time npmjs.com steps](#one-time-your-actions-on-npmjscom-2-minutes) above.
+2. Re-run publish (release tag already exists — use workflow dispatch):
+
+```bash
+gh workflow run release.yml --repo meoslabs/save-in-meos -f dry_run=false
+```
+
+3. Verify:
+
+```bash
+npm view @meoslabs/save-in-meos version
+curl -sI "https://unpkg.com/@meoslabs/save-in-meos@0.0.1/dist/widget.iife.js" | head -3
+```
+
 ---
 
 ## What gets published
