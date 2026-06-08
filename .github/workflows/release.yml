@@ -35,6 +35,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Typecheck
+        run: npm run typecheck
+
       - name: Build library + widget bundle
         run: npm run build && npm run build:widget
 
@@ -49,6 +52,10 @@ jobs:
 
       - name: Unit tests
         run: npm test
+
+      - name: Release tag matches package.json
+        if: github.event_name == 'release'
+        run: npx tsx scripts/check-release-version.ts
 
       - name: Publish to npm (OIDC trusted publishing)
         if: github.event_name == 'release' || (github.event_name == 'workflow_dispatch' && inputs.dry_run == 'false')

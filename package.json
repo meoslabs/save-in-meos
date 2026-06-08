@@ -80,6 +80,10 @@
     "url": "https://meos.do"
   },
   "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
   "devDependencies": {
     "@types/node": "^22.15.0",
     "@types/pako": "^2.0.4",

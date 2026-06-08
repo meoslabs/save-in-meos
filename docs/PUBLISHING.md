@@ -45,23 +45,43 @@ curl -sI "https://unpkg.com/@meoslabs/save-in-meos@0.0.1/dist/widget.iife.js" | 
 
 Open in browser and confirm `typeof MeosSave.initSaveButton === "function"` (not `MeosSave.default`).
 
-### Path B — CI publish (recommended after v0)
+### Path B — CI publish (recommended — **use this**)
 
-**Option 1 — OIDC trusted publishing** (current `release.yml`):
+**OIDC trusted publishing** (`release.yml` — no `NPM_TOKEN` secret):
 
-1. npm → Package → **Trusted Publisher** → GitHub Actions
-2. Link `meoslabs/save-in-meos`, workflow `release.yml`, environment (optional)
-3. No automation token secret required — workflow uses `id-token: write` + `npm publish --provenance`
+#### One-time: your actions on npmjs.com (~2 minutes)
 
-**Option 2 — automation token** (if OIDC not configured):
+1. Log in at [npmjs.com](https://www.npmjs.com) as a **`meoslabs` org member** with publish rights.
+2. Open **meoslabs** org → **Packages** (or [npm trusted publishers](https://www.npmjs.com/settings/meoslabs/publishing)).
+3. **Add trusted publisher** → **GitHub Actions** and enter **exactly**:
 
-Add an npm access token to GitHub repository secrets and change the publish step to use `NODE_AUTH_TOKEN` (see npm docs).
+| Field | Value |
+|--------|--------|
+| Repository owner | `meoslabs` |
+| Repository name | `save-in-meos` |
+| Workflow filename | `release.yml` |
+| Environment | *(leave blank)* |
 
-```yaml
-- run: npm publish --access public --provenance
-  env:
-    NODE_AUTH_TOKEN: ${{ secrets.<your-npm-token-secret> }}
-```
+4. Package name: `@meoslabs/save-in-meos` (can be configured **before** the first publish).
+
+No automation token. No GitHub secret. The workflow uses `id-token: write` + `npm publish --provenance --access public`.
+
+#### One-time: GitHub (usually already done)
+
+- **Actions** enabled on `meoslabs/save-in-meos`
+- Default branch **`main`**
+
+#### Every release (automated)
+
+1. Merge to `main` with CI green
+2. Bump `version` in `package.json` (commit to `main`)
+3. Create **GitHub Release** with tag **`vX.Y.Z`** matching `package.json` (e.g. `v0.0.1`)
+4. `release.yml` runs → verifies → `npm publish`
+5. unpkg / jsDelivr pick up the tarball within minutes
+
+**Dry run** (no publish): Actions → Release → Run workflow → `dry_run: true`
+
+**Manual publish trigger** (after trusted publisher is set): Run workflow → `dry_run: false` on `main`.
 
 ---
 
