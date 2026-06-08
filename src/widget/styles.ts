@@ -9,36 +9,40 @@ export const MEOS_SAVE_WIDGET_CSS = `
 .meos-save-chip {
   display: inline-flex;
   align-items: center;
-  gap: 0.375rem;
-  min-height: 32px;
-  max-height: 36px;
-  height: 34px;
-  padding: 0 0.75rem;
+  justify-content: center;
+  gap: 0.3125rem;
+  min-height: 30px;
+  max-height: 32px;
+  height: 31px;
+  padding: 0 0.625rem;
   margin: 0;
   font-family: var(--meos-font, "Inconsolata", ui-monospace, monospace);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
   line-height: 1;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.02em;
   text-transform: lowercase;
   color: #000000;
   background: transparent;
-  border: 1px solid rgba(0, 0, 0, 0.22);
-  border-radius: var(--meos-radius, 0);
+  border: 1px solid rgba(0, 0, 0, 0.24);
+  border-radius: var(--meos-radius, 2px);
   cursor: pointer;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
+  pointer-events: auto;
+  user-select: none;
   transition:
-    background 0.15s ease,
-    border-color 0.15s ease,
-    opacity 0.15s ease;
+    background 0.12s ease,
+    border-color 0.12s ease,
+    opacity 0.12s ease,
+    transform 0.08s ease;
   appearance: none;
   vertical-align: middle;
 }
 
 .meos-save-chip:hover {
-  background: rgba(0, 0, 0, 0.05);
-  border-color: rgba(0, 0, 0, 0.38);
+  background: rgba(0, 0, 0, 0.06);
+  border-color: rgba(0, 0, 0, 0.42);
 }
 
 .meos-save-chip:focus-visible {
@@ -47,29 +51,51 @@ export const MEOS_SAVE_WIDGET_CSS = `
 }
 
 .meos-save-chip:active {
-  opacity: 0.88;
+  opacity: 0.9;
+  transform: scale(0.98);
 }
 
 @media (prefers-color-scheme: dark) {
   .meos-save-chip {
     color: #ffffff;
-    border-color: rgba(255, 255, 255, 0.28);
+    border-color: rgba(255, 255, 255, 0.3);
   }
 
   .meos-save-chip:hover {
-    background: rgba(255, 255, 255, 0.07);
-    border-color: rgba(255, 255, 255, 0.42);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.46);
   }
 }
 
 .meos-save-chip__icon {
-  width: 14px;
-  height: 14px;
+  width: 13px;
+  height: 13px;
   flex-shrink: 0;
   display: block;
+  pointer-events: none;
+}
+
+.meos-save-chip--spin .meos-save-chip__icon {
+  animation: meos-save-spin 14s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .meos-save-chip--spin .meos-save-chip__icon {
+    animation: none;
+  }
+}
+
+@keyframes meos-save-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .meos-save-chip__label {
   white-space: nowrap;
+  pointer-events: none;
 }
 `

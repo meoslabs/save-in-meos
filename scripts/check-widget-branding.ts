@@ -35,11 +35,14 @@ const REQUIRED_CHIP_CLASSES = [
 ] as const
 
 const REQUIRED_DIMENSION_TOKENS = [
-  "min-height: 32px",
-  "max-height: 36px",
-  "height: 34px",
-  "font-size: 12px",
+  "min-height: 30px",
+  "max-height: 32px",
+  "height: 31px",
+  "font-size: 11px",
   "display: inline-flex",
+  "pointer-events: auto",
+  "meos-save-chip--spin",
+  "prefers-reduced-motion: reduce",
 ] as const
 
 const FORBIDDEN_STYLE_HOOKS = [
@@ -178,6 +181,12 @@ if (!widgetIndex) {
   )?.[0]
   if (optionsIface && /\blabel\??\s*:/.test(optionsIface)) {
     fail("src/widget/index.ts: SaveButtonOptions must not expose label override")
+  }
+  if (!/\bspin\??\s*:\s*boolean/.test(widgetIndex)) {
+    fail("src/widget/index.ts: SaveButtonOptions must expose optional spin toggle")
+  }
+  if (!widgetIndex.includes("meos-save-chip--spin")) {
+    fail("src/widget/index.ts: must apply meos-save-chip--spin when spin is enabled")
   }
 }
 

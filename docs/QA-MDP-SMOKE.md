@@ -8,8 +8,8 @@ Canonical URL: `https://meos.do/databox:import:{encoded}?w={widgetId}`.
 | Lane | Repo | Command | Proves |
 |------|------|---------|--------|
 | A — Codec | save-in-meos | `npm test && npm run check:mdp` | Encode/decode roundtrips, tier pick |
-| B — Desktop browser | meos-desktop | `yarn e2e e2e/components/system/MlpImport.spec.ts` | Import frame + QR |
-| C — Desktop unit | meos-desktop | `yarn test __tests__/utils/mlp-import.spec.ts` | Decode fixtures, sanitizer |
+| B — Desktop browser | meos-desktop | `yarn e2e e2e/components/system/MdpImport.spec.ts` | Import frame + QR |
+| C — Desktop unit | meos-desktop | `yarn test __tests__/utils/mdp-import.spec.ts` | Decode fixtures, sanitizer |
 | D — Core privacy | meos-core-logic | `npx ts-node scripts/lip/check-mdp-privacy.ts` | No raw URL on `deeplink_resolved` |
 | E — Edge privacy | website-getmeos.com | `npm test` (vitest `check-mdp-edge-privacy`) | No import blob in `campaign_path` |
 | F — App handlers | meos-app | `yarn mip:check:fast` | Bridge, registry, sanitizer wiring |
@@ -23,7 +23,7 @@ Assume a release/dev APK is sideloaded ([meos-android-sideload skill](https://gi
 adb shell am start -a android.intent.action.VIEW \
   -d 'https://meos.do/databox:import:{fixture}?w=adb-test'
 
-adb logcat -s ReactNativeJS | rg -i 'mlpImport|share-receive|usePadSeed'
+adb logcat -s ReactNativeJS | rg -i 'mdpImport|share-receive|usePadSeed'
 ```
 
 | Case | Input | Expected |

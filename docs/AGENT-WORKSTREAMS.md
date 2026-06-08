@@ -32,7 +32,7 @@ Playwright + demo + widget CDN
 |------|------|----------------|
 | **Checkers** | `check-mdp-*`, fixtures, pre-commit | Feature implementation |
 | **Codec** (this repo) | `src/**`, `examples/**` | `DeepLinkProvider`, middleware |
-| **App** | `mlpImportBridge.ts`, overlay, handlers | Codec, frame UI |
+| **App** | `mdpImportBridge.ts`, overlay, handlers | Codec, frame UI |
 | **Desktop** | `_middleware.ts`, `DataboxImportFrame` | `app.config` intents |
 | **Core-logic** | LIP-0028, `sanitizeDeeplinkForAnalytics` | Frame components |
 

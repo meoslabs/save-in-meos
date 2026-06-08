@@ -15,6 +15,8 @@ import { MEOS_SAVE_WIDGET_CSS } from "./styles.js"
 
 export interface SaveButtonOptions extends ImportIntentInput {
   widgetId?: string
+  /** Slow logo spin on the chip — default true; respects prefers-reduced-motion. */
+  spin?: boolean
 }
 
 /** Fixed user-facing copy — not customisable (meos brand). */
@@ -56,9 +58,9 @@ function isEmptyMount(el: HTMLElement): boolean {
   return el.childNodes.length === 0 && !el.textContent?.trim()
 }
 
-function applyBrandedChip(button: HTMLButtonElement): void {
+function applyBrandedChip(button: HTMLButtonElement, spin = true): void {
   button.type = "button"
-  button.className = MEOS_SAVE_CHIP_CLASS
+  button.className = spin ? `${MEOS_SAVE_CHIP_CLASS} meos-save-chip--spin` : MEOS_SAVE_CHIP_CLASS
   button.setAttribute("data-meos-save", "")
   button.setAttribute("aria-label", MEOS_SAVE_LABEL)
   button.innerHTML = buildSaveChipMarkup()
@@ -71,7 +73,7 @@ function mountInShadowHost(host: HTMLElement, options: SaveButtonOptions): HTMLB
   style.textContent = MEOS_SAVE_WIDGET_CSS
   shadow.appendChild(style)
   const button = document.createElement("button")
-  applyBrandedChip(button)
+  applyBrandedChip(button, options.spin !== false)
   shadow.appendChild(button)
   wireClick(button, options)
   return button
@@ -132,7 +134,7 @@ export function initSaveButton(
     el.appendChild(button)
   }
 
-  applyBrandedChip(button)
+  applyBrandedChip(button, options.spin !== false)
   wireClick(button, options)
   return button
 }
