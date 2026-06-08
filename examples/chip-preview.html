@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>save in meos — chip preview</title>
+    <link rel="stylesheet" href="./vendor/fonts.css" />
+    <style>
+      :root {
+        --page-bg: #ffffff;
+        --page-fg: #111111;
+        --page-border: rgba(0, 0, 0, 0.2);
+      }
+      html[data-page-theme="dark"] {
+        --page-bg: #111111;
+        --page-fg: #ffffff;
+        --page-border: rgba(255, 255, 255, 0.28);
+      }
+      body {
+        font-family: var(--meos-font, ui-monospace, monospace);
+        background: var(--page-bg);
+        color: var(--page-fg);
+        margin: 0;
+        padding: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        box-sizing: border-box;
+      }
+      .row {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .fake-share {
+        display: inline-flex;
+        align-items: center;
+        height: 34px;
+        padding: 0 0.75rem;
+        font-size: 12px;
+        color: var(--page-fg);
+        border: 1px solid var(--page-border);
+        border-radius: var(--meos-radius, 2px);
+        opacity: 0.65;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="row" aria-label="Share actions">
+      <span class="fake-share">post</span>
+      <span class="fake-share">copy link</span>
+      <div id="meos-save-mount"></div>
+    </div>
+    <script src="./vendor/widget.iife.js"></script>
+    <script>
+      ;(function () {
+        var params = new URLSearchParams(location.search)
+        var theme = params.get("theme") || "auto"
+        if (theme === "dark") {
+          document.documentElement.setAttribute("data-page-theme", "dark")
+        } else if (theme === "light") {
+          document.documentElement.setAttribute("data-page-theme", "light")
+        }
+
+        var chip = {}
+        var height = Number(params.get("height"))
+        var radius = Number(params.get("radius"))
+        var paddingX = Number(params.get("paddingX"))
+        var iconSize = Number(params.get("iconSize"))
+        if (!Number.isNaN(height)) chip.height = height
+        if (!Number.isNaN(radius)) chip.radius = radius
+        if (!Number.isNaN(paddingX)) chip.paddingX = paddingX
+        if (!Number.isNaN(iconSize)) chip.iconSize = iconSize
+
+        var mountOpts = {
+          u: "https://example.com/article",
+          widgetId: "theme-preview",
+          theme: theme,
+        }
+
+        var preset = params.get("preset")
+        if (preset === "default" || preset === "compact") {
+          mountOpts.chipPreset = preset
+        }
+        if (Object.keys(chip).length > 0) mountOpts.chip = chip
+
+        MeosSave.initSaveButton("#meos-save-mount", mountOpts)
+      })()
+    </script>
+  </body>
+</html>

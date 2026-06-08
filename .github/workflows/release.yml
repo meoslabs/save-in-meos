@@ -1,0 +1,62 @@
+# WHY: Published npm tarball is the source of truth for unpkg/jsDelivr CDN mirrors.
+# WHAT: Build, verify, and npm publish on GitHub Release via OIDC trusted publishing.
+# GUARDED: OIDC trusted publisher on npmjs.com — see docs/PUBLISHING.md.
+name: Release
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Skip npm publish (build + verify only)"
+        required: false
+        default: "true"
+        type: choice
+        options:
+          - "true"
+          - "false"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          registry-url: https://registry.npmjs.org
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Build library + widget bundle
+        run: npm run build && npm run build:widget
+
+      - name: MDP contract + widget branding
+        run: npm run check:mdp
+
+      - name: Public scrub
+        run: npm run check:public-scrub
+
+      - name: CI workflow ratchet
+        run: npm run check:ci
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Release tag matches package.json
+        if: github.event_name == 'release'
+        run: npx tsx scripts/check-release-version.ts
+
+      - name: Publish to npm (OIDC trusted publishing)
+        if: github.event_name == 'release' || (github.event_name == 'workflow_dispatch' && inputs.dry_run == 'false')
+        run: npm publish --provenance --access public

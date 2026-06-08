@@ -1,0 +1,13 @@
+{
+  "name": "ref-with-widget",
+  "description": "REF tier with ?w= widget attribution",
+  "intent": {
+    "v": 1,
+    "tier": "REF",
+    "u": "https://news.ycombinator.com/item?id=12345"
+  },
+  "widgetId": "hn-embed",
+  "expectedHost": "meos.do",
+  "expectedResource": "databox:import",
+  "maxUrlLength": 2048
+}

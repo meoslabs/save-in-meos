@@ -1,0 +1,19 @@
+/**
+ * WHY: Branded meos mark for the save chip — monochrome, currentColor.
+ * WHAT: Inline SVG string for the bundled logo path (no external asset URL).
+ * WHERE: Composed inside initSaveButton / integrator markup via buildSaveChipMarkup.
+ * GUARDED: check-widget-branding verifies icon class + SVG presence in widget sources.
+ */
+
+/** Exact viewBox from assets/branding/meos-logo-charcoal-nostroke.svg (SSOT). */
+export const MEOS_SAVE_ICON_VIEWBOX = "0 0 27.275015 30.362297"
+
+/** Logo path from assets/branding/meos-logo-charcoal-nostroke.svg */
+const MEOS_LOGO_PATH =
+  "m 392.92917,553.87771 v 12.58642 c 0,0.81325 -0.43385,1.5653 -1.13856,1.97265 l -7.84461,4.52907 c -2.06849,1.19415 -4.65283,-0.29916 -4.65415,-2.68721 v -0.66167 c 0,-7.00219 -5.8219,-10.18416 -9.06937,-11.41442 -1.02593,-0.38945 -2.12418,0.3626 -2.12418,1.45958 v 0.004 c 0.0556,4.33298 2.37151,8.34226 6.13053,10.54974 l 4.52634,2.65794 c 0.31136,0.18203 0.5074,0.51155 0.52136,0.87166 0,0.01 0,0.0195 0.001,0.0342 0.0342,0.82852 -0.86468,1.36652 -1.5834,0.95219 l -10.90009,-6.29314 c -0.70476,-0.4075 -1.13988,-1.1594 -1.13988,-1.97265 v -9.05809 c 0.001,-2.3883 2.58565,-3.87985 4.65415,-2.68717 l 0.58529,0.33772 c 6.05961,3.4906 11.72027,0.0439 14.4088,-2.15337 0.38945,-0.31819 0.57831,-0.76732 0.57831,-1.21498 0,-0.53244 -0.26695,-1.05931 -0.78401,-1.35676 -3.78117,-2.11857 -8.41039,-2.11721 -12.20269,0.0342 l -4.56528,2.59117 c -0.31282,0.17813 -0.69509,0.18203 -1.0148,0.0146 -0.01,-0.005 -0.0195,-0.01 -0.0293,-0.0146 -0.73399,-0.38652 -0.752,-1.43177 -0.0342,-1.84747 l 10.90019,-6.29319 c 0.70476,-0.4075 1.57359,-0.4075 2.27845,0 l 7.84461,4.52907 c 2.06713,1.19415 2.06713,4.17877 0,5.37429 l -0.57411,0.33088 c -0.01,0.005 -0.0244,0.0146 -0.0342,0.0195 -6.03043,3.50597 -5.87334,10.12028 -5.31733,13.54285 0.12933,0.79656 0.81608,1.31928 1.54865,1.31928 0.26109,0 0.52966,-0.0669 0.78128,-0.21278 3.72559,-2.21456 6.03883,-6.2251 6.07079,-10.58459 l 0.0391,-5.2492 c 0.003,-0.36016 0.19033,-0.69373 0.49489,-0.88694 0.01,-0.005 0.0195,-0.01 0.0244,-0.0146 0.70178,-0.44215 1.61654,0.0654 1.61654,0.89529 z"
+
+const LOGO_TRANSFORM = "translate(-365.65417,-544.51253)"
+
+export function buildSaveIconSvg(className: string): string {
+  return `<svg class="${className}" viewBox="${MEOS_SAVE_ICON_VIEWBOX}" xmlns="http://www.w3.org/2000/svg" shape-rendering="geometricPrecision" aria-hidden="true" focusable="false"><g transform="${LOGO_TRANSFORM}"><path d="${MEOS_LOGO_PATH}" fill="currentColor"/></g></svg>`
+}

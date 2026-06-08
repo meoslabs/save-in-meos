@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+# WHY: MDP contract + branding + types before commit.
+# GUARDED: check-mdp-contract is BLOCKING (codec SSOT must not drift).
+
+set -e
+
+echo "🛡️ save-in-meos: MDP contract..."
+npm run check:mdp-contract
+
+echo "🛡️ save-in-meos: widget branding..."
+npm run check:widget-branding
+
+echo "🔍 save-in-meos: typecheck..."
+npm run typecheck

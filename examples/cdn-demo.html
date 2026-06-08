@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>save in meos — CDN integrator snippet</title>
+    <!-- Pin the version — never use @latest in production. -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/@meoslabs/save-in-meos@0.0.1/src/widget/fonts.css"
+    />
+    <style>
+      :root {
+        color-scheme: light dark;
+        --page-bg: #fff;
+        --page-fg: #000;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --page-bg: #151515;
+          --page-fg: #fff;
+        }
+      }
+      body {
+        font-family: var(--meos-font, ui-monospace, monospace);
+        background: var(--page-bg);
+        color: var(--page-fg);
+        margin: 2rem;
+        line-height: 1.6;
+      }
+      pre {
+        background: rgba(127, 127, 127, 0.12);
+        padding: 1rem;
+        overflow-x: auto;
+        font-size: 0.85rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>CDN embed — copy/paste</h1>
+    <p>
+      Drop this on any page. No npm, no bundler. The chip renders in a closed
+      shadow root — integrators cannot restyle internals.
+    </p>
+
+    <div id="meos-save-mount"></div>
+
+    <h2>Snippet</h2>
+    <pre><code>&lt;!-- Pin @meoslabs/save-in-meos version --&gt;
+&lt;link rel="stylesheet"
+  href="https://unpkg.com/@meoslabs/save-in-meos@0.0.1/src/widget/fonts.css" /&gt;
+
+&lt;div id="meos-save-mount"&gt;&lt;/div&gt;
+
+&lt;script src="https://unpkg.com/@meoslabs/save-in-meos@0.0.1/dist/widget.iife.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  MeosSave.initSaveButton("#meos-save-mount", {
+    u: location.href,
+    widgetId: "your-site-id",
+  });
+&lt;/script&gt;</code></pre>
+
+    <p>
+      jsDelivr alternative:
+      <code>https://cdn.jsdelivr.net/npm/@meoslabs/save-in-meos@0.0.1/dist/widget.iife.js</code>
+    </p>
+    <p>
+      Alias:
+      <code>…/dist/save-in-meos.min.js</code> (same bundle as
+      <code>widget.iife.js</code>).
+    </p>
+
+    <script src="https://unpkg.com/@meoslabs/save-in-meos@0.0.1/dist/widget.iife.js"></script>
+    <script>
+      MeosSave.initSaveButton("#meos-save-mount", {
+        u: location.href,
+        widgetId: "cdn-demo",
+      })
+    </script>
+  </body>
+</html>
