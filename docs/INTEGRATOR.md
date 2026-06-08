@@ -26,14 +26,18 @@ npm install @meos/save-in-meos
 
 ```ts
 import "@meos/save-in-meos/fonts.css"
-import { buildMeosLink } from "@meos/save-in-meos"
+import "@meos/save-in-meos/widget.css"
+import { initSaveButton } from "@meos/save-in-meos"
 
-const url = buildMeosLink({
-  v: 1,
-  tier: "REF",
+// Empty mount → closed shadow DOM chip (integrators cannot restyle)
+initSaveButton("#meos-save-mount", {
   u: "https://example.com/article",
-}, "my-widget")
+  widgetId: "my-widget",
+})
 ```
+
+The chip label is fixed at **save to meos** — there is no `label` option.
+Branding is enforced by the widget implementation and `check-widget-branding`.
 
 ---
 
@@ -54,9 +58,12 @@ const url = buildMeosLink({
 | Wrong | Right |
 |-------|-------|
 | `MEOS`, `Save to MEOS` | `meos`, `save to meos` |
+| Custom colours, fonts, or label on the chip | Use the packaged chip as-is |
 
 - Inconsolata is **bundled** in the package (OFL-1.1)
+- Import `@meos/save-in-meos/widget.css` only when composing markup yourself
 - Do **not** add Google Fonts `<link>` tags
+- Do **not** override `.meos-save-chip` styles — use `initSaveButton` on an empty mount
 
 ---
 

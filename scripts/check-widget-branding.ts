@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 /**
  * WHY: Widget must match meos-app monochrome B/W + bundled Inconsolata (no CDN).
- * WHAT: Verifies font assets, @font-face CSS, no Google Fonts URLs, lowercase label.
+ * WHAT: Verifies font assets, chip CSS, fixed label, no integrator style hooks.
  * HOW: File presence + content scan of src/, examples/, package exports.
  * WHERE: save-in-meos/scripts/check-widget-branding.ts
  * WHEN: Pre-commit (BLOCKING); should PASS on Wave -1 bootstrap (fonts ship in repo).
@@ -28,6 +28,30 @@ const CDN_PATTERNS = [/fonts\.googleapis\.com/i, /fonts\.gstatic\.com/i] as cons
 
 const DEFAULT_LABEL = "save to meos"
 
+const REQUIRED_CHIP_CLASSES = [
+  ".meos-save-chip",
+  ".meos-save-chip__icon",
+  ".meos-save-chip__label",
+] as const
+
+const REQUIRED_DIMENSION_TOKENS = [
+  "min-height: 32px",
+  "max-height: 36px",
+  "height: 34px",
+  "font-size: 12px",
+  "display: inline-flex",
+] as const
+
+const FORBIDDEN_STYLE_HOOKS = [
+  /--meos-save-fg/,
+  /--meos-save-border/,
+  /--meos-save-hover/,
+  /label\?:/,
+  /className\?:/,
+  /style\?:/,
+  /theme\?:/,
+] as const
+
 function fail(message: string): void {
   violations.push(message)
 }
@@ -52,6 +76,24 @@ function walkFiles(dir: string): string[] {
     }
   }
   return out
+}
+
+function assertCssRules(rel: string, content: string): void {
+  for (const selector of REQUIRED_CHIP_CLASSES) {
+    if (!content.includes(selector)) {
+      fail(`${rel}: missing required selector ${selector}`)
+    }
+  }
+  for (const token of REQUIRED_DIMENSION_TOKENS) {
+    if (!content.includes(token)) {
+      fail(`${rel}: missing required dimension rule "${token}"`)
+    }
+  }
+  for (const pattern of FORBIDDEN_STYLE_HOOKS) {
+    if (pattern.test(content)) {
+      fail(`${rel}: forbidden integrator style hook matching ${pattern}`)
+    }
+  }
 }
 
 // ── Font assets ─────────────────────────────────────────────────────────────
@@ -91,13 +133,64 @@ if (!fontsCss) {
   }
 }
 
-// ── package.json fonts.css export ─────────────────────────────────────────────
+// ── Widget chip CSS (import + injection mirror) ───────────────────────────────
+const widgetCss = read("src/widget/widget.css")
+if (!widgetCss) {
+  fail("Missing src/widget/widget.css")
+} else {
+  assertCssRules("src/widget/widget.css", widgetCss)
+  if (!/text-transform:\s*lowercase/.test(widgetCss)) {
+    fail("src/widget/widget.css: label must render lowercase")
+  }
+}
+
+const stylesTs = read("src/widget/styles.ts")
+if (!stylesTs) {
+  fail("Missing src/widget/styles.ts")
+} else {
+  assertCssRules("src/widget/styles.ts", stylesTs)
+  if (!stylesTs.includes("MEOS_SAVE_WIDGET_CSS")) {
+    fail("src/widget/styles.ts: must export MEOS_SAVE_WIDGET_CSS for injection")
+  }
+}
+
+// ── Widget API — fixed label, no style overrides ──────────────────────────────
+const widgetIndex = read("src/widget/index.ts")
+if (!widgetIndex) {
+  fail("Missing src/widget/index.ts")
+} else {
+  if (!widgetIndex.includes(`MEOS_SAVE_LABEL = "${DEFAULT_LABEL}"`)) {
+    fail(`src/widget/index.ts: MEOS_SAVE_LABEL must be exactly "${DEFAULT_LABEL}"`)
+  }
+  if (!widgetIndex.includes("attachShadow")) {
+    fail("src/widget/index.ts: empty mounts must use closed shadow DOM")
+  }
+  if (!widgetIndex.includes("meos-save-chip")) {
+    fail("src/widget/index.ts: must use fixed class meos-save-chip")
+  }
+  for (const pattern of FORBIDDEN_STYLE_HOOKS) {
+    if (pattern.test(widgetIndex)) {
+      fail(`src/widget/index.ts: forbidden public API hook matching ${pattern}`)
+    }
+  }
+  const optionsIface = widgetIndex.match(
+    /interface SaveButtonOptions[\s\S]*?\}/,
+  )?.[0]
+  if (optionsIface && /\blabel\??\s*:/.test(optionsIface)) {
+    fail("src/widget/index.ts: SaveButtonOptions must not expose label override")
+  }
+}
+
+// ── package.json exports ──────────────────────────────────────────────────────
 const pkg = read("package.json")
 if (!pkg) {
   fail("Missing package.json")
 } else {
   if (!pkg.includes('"./fonts.css"')) {
     fail('package.json exports must include "./fonts.css"')
+  }
+  if (!pkg.includes('"./widget.css"')) {
+    fail('package.json exports must include "./widget.css"')
   }
 }
 
@@ -122,6 +215,14 @@ if (!demoHtml) {
   if (!demoHtml.includes(DEFAULT_LABEL)) {
     fail(`examples/demo.html: must use default label "${DEFAULT_LABEL}"`)
   }
+  if (
+    !demoHtml.includes("meos-save-chip") &&
+    !demoHtml.includes("initSaveButton")
+  ) {
+    fail(
+      "examples/demo.html: must use meos-save-chip or initSaveButton shadow mount",
+    )
+  }
   if (/\bMEOS\b/.test(demoHtml)) {
     fail('examples/demo.html: user-facing copy must be lowercase "meos", not "MEOS"')
   }
@@ -141,4 +242,5 @@ if (violations.length > 0) {
 
 console.log("check-widget-branding: PASS")
 console.log(`fonts: ${REQUIRED_FONT_FILES.length} assets verified`)
+console.log(`chip classes: ${REQUIRED_CHIP_CLASSES.length} selectors`)
 console.log(`default label: "${DEFAULT_LABEL}"`)

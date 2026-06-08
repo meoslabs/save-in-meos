@@ -11,11 +11,18 @@
       "import": "./dist/index.js",
       "default": "./dist/index.js"
     },
-    "./fonts.css": "./src/widget/fonts.css"
+    "./fonts.css": "./src/widget/fonts.css",
+    "./widget.css": "./src/widget/widget.css",
+    "./widget": {
+      "types": "./dist/widget/index.d.ts",
+      "import": "./dist/widget/index.js",
+      "default": "./dist/widget/index.js"
+    }
   },
   "files": [
     "dist/",
     "src/widget/fonts.css",
+    "src/widget/widget.css",
     "assets/fonts/"
   ],
   "scripts": {
