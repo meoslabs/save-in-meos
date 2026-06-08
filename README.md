@@ -22,14 +22,14 @@ Static SVG previews of the branded chip (regenerated from widget SSOT on `npm ru
       <td><strong>light</strong></td>
       <td align="center">
         <img
-          src="https://unpkg.com/@meoslabs/save-in-meos@0.0.3/assets/preview/chip-default-light.svg"
+          src="https://cdn.jsdelivr.net/npm/@meoslabs/save-in-meos@0.0.3/assets/preview/chip-default-light.svg"
           alt="save in meos chip — default preset, light theme"
           height="55"
         />
       </td>
       <td align="center">
         <img
-          src="https://unpkg.com/@meoslabs/save-in-meos@0.0.3/assets/preview/chip-compact-light.svg"
+          src="https://cdn.jsdelivr.net/npm/@meoslabs/save-in-meos@0.0.3/assets/preview/chip-compact-light.svg"
           alt="save chip — compact preset, light theme"
           height="52"
         />
@@ -39,14 +39,14 @@ Static SVG previews of the branded chip (regenerated from widget SSOT on `npm ru
       <td><strong>dark</strong></td>
       <td align="center">
         <img
-          src="https://unpkg.com/@meoslabs/save-in-meos@0.0.3/assets/preview/chip-default-dark.svg"
+          src="https://cdn.jsdelivr.net/npm/@meoslabs/save-in-meos@0.0.3/assets/preview/chip-default-dark.svg"
           alt="save in meos chip — default preset, dark theme"
           height="55"
         />
       </td>
       <td align="center">
         <img
-          src="https://unpkg.com/@meoslabs/save-in-meos@0.0.3/assets/preview/chip-compact-dark.svg"
+          src="https://cdn.jsdelivr.net/npm/@meoslabs/save-in-meos@0.0.3/assets/preview/chip-compact-dark.svg"
           alt="save chip — compact preset, dark theme"
           height="52"
         />
