@@ -1,6 +1,6 @@
 # Contributing — save-in-meos
 
-Thanks for helping maintain the public `@meos/save-in-meos` package.
+Thanks for helping maintain the public `@meoslabs/save-in-meos` package.
 
 ## Setup
 

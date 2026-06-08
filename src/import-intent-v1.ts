@@ -3,7 +3,7 @@
  *      Encode/decode for databox:import must live only in this package.
  * WHAT: Types + encode/decode/buildMeosLink for `databox:import` URLs.
  * HOW: Optimised wire schema (k: u|ut|i|f) → JSON → deflateRaw → base64url.
- * WHERE: @meos/save-in-meos — consumed by widget and meos clients.
+ * WHERE: @meoslabs/save-in-meos — consumed by widget and meos clients.
  * GUARDED: check-mdp-contract.ts golden fixtures in fixtures/mdp/.
  */
 

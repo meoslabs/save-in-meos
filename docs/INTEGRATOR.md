@@ -1,4 +1,4 @@
-# Integrator guide — @meos/save-in-meos
+# Integrator guide — @meoslabs/save-in-meos
 
 Embed a **save to meos** button on any site. The button opens a canonical import URL:
 
@@ -14,7 +14,7 @@ On desktop, users see the meos.do import preview (with QR). On mobile with the m
 
 | Use case | How |
 |----------|-----|
-| **npm / bundler** | `npm install @meos/save-in-meos` |
+| **npm / bundler** | `npm install @meoslabs/save-in-meos` |
 | **Script tag (no build)** | Pin unpkg or jsDelivr URLs — [`examples/cdn-demo.html`](../examples/cdn-demo.html) |
 | **Programmatic only** | Import `buildMeosLink` / `buildImportIntentV1` — skip widget CSS |
 | **Try it** | `npm run demo` → [`examples/demo.html`](../examples/demo.html?local=1), [`theme-demo.html`](../examples/theme-demo.html) |
@@ -32,15 +32,15 @@ On desktop, users see the meos.do import preview (with QR). On mobile with the m
 ## npm install
 
 ```bash
-npm install @meos/save-in-meos
+npm install @meoslabs/save-in-meos
 ```
 
 ### Widget embed
 
 ```ts
-import "@meos/save-in-meos/fonts.css"
-import "@meos/save-in-meos/widget.css"
-import { initSaveButton } from "@meos/save-in-meos"
+import "@meoslabs/save-in-meos/fonts.css"
+import "@meoslabs/save-in-meos/widget.css"
+import { initSaveButton } from "@meoslabs/save-in-meos"
 
 // Empty mount → closed shadow DOM chip (integrators cannot restyle internals)
 initSaveButton("#meos-save-mount", {
@@ -59,7 +59,7 @@ import {
   buildImportIntentV1,
   decodeMeosLink,
   parseWidgetAttribution,
-} from "@meos/save-in-meos"
+} from "@meoslabs/save-in-meos"
 
 const intent = buildImportIntentV1({
   u: "https://example.com/post",
@@ -80,10 +80,10 @@ No npm or bundler required. Pin the package version — never use `@latest` in p
 ```html
 <link
   rel="stylesheet"
-  href="https://unpkg.com/@meos/save-in-meos@0.0.1/src/widget/fonts.css"
+  href="https://unpkg.com/@meoslabs/save-in-meos@0.0.1/src/widget/fonts.css"
 />
 <div id="meos-save-mount"></div>
-<script src="https://unpkg.com/@meos/save-in-meos@0.0.1/dist/widget.iife.js"></script>
+<script src="https://unpkg.com/@meoslabs/save-in-meos@0.0.1/dist/widget.iife.js"></script>
 <script>
   MeosSave.initSaveButton("#meos-save-mount", {
     u: location.href,
@@ -95,12 +95,12 @@ No npm or bundler required. Pin the package version — never use `@latest` in p
 **jsDelivr:**
 
 ```
-https://cdn.jsdelivr.net/npm/@meos/save-in-meos@0.0.1/dist/widget.iife.js
+https://cdn.jsdelivr.net/npm/@meoslabs/save-in-meos@0.0.1/dist/widget.iife.js
 ```
 
 **Alias:** `dist/save-in-meos.min.js` (same minified bundle).
 
-Widget chip styles are injected into a closed shadow root at runtime — you only need `fonts.css` for Inconsolata. If you compose chip markup yourself, also import `@meos/save-in-meos/widget.css` or `dist/widget.iife.css`.
+Widget chip styles are injected into a closed shadow root at runtime — you only need `fonts.css` for Inconsolata. If you compose chip markup yourself, also import `@meoslabs/save-in-meos/widget.css` or `dist/widget.iife.css`.
 
 ### `window.MeosSave` API (CDN global)
 
@@ -126,7 +126,7 @@ Self-hosting: run `npm run build:widget` and serve `dist/widget.iife.js` from yo
 | Custom colours, fonts, or label on the chip | Use the packaged chip as-is |
 
 - Inconsolata is **bundled** in the package (OFL-1.1)
-- Import `@meos/save-in-meos/widget.css` only when composing markup yourself
+- Import `@meoslabs/save-in-meos/widget.css` only when composing markup yourself
 - Do **not** add Google Fonts `<link>` tags
 - Do **not** override `.meos-save-chip` styles — use `initSaveButton` on an empty mount
 

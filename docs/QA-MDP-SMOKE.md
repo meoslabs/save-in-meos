@@ -1,4 +1,4 @@
-# MDP smoke tests — @meos/save-in-meos
+# MDP smoke tests — @meoslabs/save-in-meos
 
 Package-level gates before publishing a new version. Canonical URL shape:
 

@@ -1,4 +1,4 @@
-# Publishing @meos/save-in-meos
+# Publishing @meoslabs/save-in-meos
 
 How maintainers ship npm releases and CDN mirrors for integrators.
 

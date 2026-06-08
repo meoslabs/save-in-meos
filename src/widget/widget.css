@@ -1,7 +1,7 @@
 /**
  * WHY: Canonical branded save chip — social-share row size, meos B/W ghost style.
  * WHAT: Scoped `meos-save-` classes; integrators import, must not override.
- * WHERE: import '@meos/save-in-meos/widget.css' (pairs with fonts.css).
+ * WHERE: import '@meoslabs/save-in-meos/widget.css' (pairs with fonts.css).
  * GUARDED: check-widget-branding enforces selectors, dimensions, and no style hooks.
  */
 

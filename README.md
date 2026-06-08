@@ -1,4 +1,4 @@
-# @meos/save-in-meos
+# @meoslabs/save-in-meos
 
 **meos deeplink protocol (MDP)** codec and **save to meos** embed widget for third-party sites.
 
@@ -8,15 +8,15 @@ Let visitors save a page (or a quote from it) into [meos](https://meos.do) with 
 
 | Use case | How |
 |----------|-----|
-| **npm / bundler** | `npm install @meos/save-in-meos` then `import { initSaveButton } from '@meos/save-in-meos'` |
-| **Script tag (CDN)** | Pin `https://unpkg.com/@meos/save-in-meos@VERSION/dist/widget.iife.js` + `fonts.css` — see [`examples/cdn-demo.html`](examples/cdn-demo.html) |
-| **Programmatic only** | `import { buildMeosLink, buildImportIntentV1 } from '@meos/save-in-meos'` — no widget CSS required |
+| **npm / bundler** | `npm install @meoslabs/save-in-meos` then `import { initSaveButton } from '@meoslabs/save-in-meos'` |
+| **Script tag (CDN)** | Pin `https://unpkg.com/@meoslabs/save-in-meos@VERSION/dist/widget.iife.js` + `fonts.css` — see [`examples/cdn-demo.html`](examples/cdn-demo.html) |
+| **Programmatic only** | `import { buildMeosLink, buildImportIntentV1 } from '@meoslabs/save-in-meos'` — no widget CSS required |
 | **Local demo** | `npm run demo` then open `http://localhost:4173/demo?local=1` (stages `examples/vendor/` via `build:widget`) |
 
 CDN mirrors (auto-indexed from npm — no separate account):
 
-- **unpkg:** `https://unpkg.com/@meos/save-in-meos@VERSION/dist/widget.iife.js`
-- **jsDelivr:** `https://cdn.jsdelivr.net/npm/@meos/save-in-meos@VERSION/dist/widget.iife.js`
+- **unpkg:** `https://unpkg.com/@meoslabs/save-in-meos@VERSION/dist/widget.iife.js`
+- **jsDelivr:** `https://cdn.jsdelivr.net/npm/@meoslabs/save-in-meos@VERSION/dist/widget.iife.js`
 
 Alias: `dist/save-in-meos.min.js` (identical minified IIFE).
 
@@ -48,9 +48,9 @@ Toggle your OS dark mode on `demo?local=1` to see the chip invert with the page 
 ## Quick start — npm widget
 
 ```ts
-import "@meos/save-in-meos/fonts.css"
-import "@meos/save-in-meos/widget.css"
-import { initSaveButton } from "@meos/save-in-meos"
+import "@meoslabs/save-in-meos/fonts.css"
+import "@meoslabs/save-in-meos/widget.css"
+import { initSaveButton } from "@meoslabs/save-in-meos"
 
 initSaveButton("#meos-save-mount", {
   u: "https://example.com/article",
@@ -61,9 +61,9 @@ initSaveButton("#meos-save-mount", {
 ## Quick start — script tag
 
 ```html
-<link rel="stylesheet" href="https://unpkg.com/@meos/save-in-meos@0.0.1/src/widget/fonts.css" />
+<link rel="stylesheet" href="https://unpkg.com/@meoslabs/save-in-meos@0.0.1/src/widget/fonts.css" />
 <div id="meos-save-mount"></div>
-<script src="https://unpkg.com/@meos/save-in-meos@0.0.1/dist/widget.iife.js"></script>
+<script src="https://unpkg.com/@meoslabs/save-in-meos@0.0.1/dist/widget.iife.js"></script>
 <script>
   MeosSave.initSaveButton("#meos-save-mount", {
     u: location.href,
@@ -80,7 +80,7 @@ import {
   buildImportIntentV1,
   decodeMeosLink,
   type ImportIntentV1,
-} from "@meos/save-in-meos"
+} from "@meoslabs/save-in-meos"
 
 const intent = buildImportIntentV1({
   u: "https://example.com/article",
