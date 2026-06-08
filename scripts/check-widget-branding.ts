@@ -260,10 +260,12 @@ for (const dir of SCAN_DIRS) {
 
 // ── README preview assets (static SVG — GitHub cannot run widget JS) ─────────
 const PREVIEW_FILES = [
+  "assets/preview/chip-hero-light.svg",
   "assets/preview/chip-default-light.svg",
   "assets/preview/chip-default-dark.svg",
   "assets/preview/chip-compact-light.svg",
   "assets/preview/chip-compact-dark.svg",
+  "assets/preview/readme-import-url.txt",
 ] as const
 
 for (const rel of PREVIEW_FILES) {
@@ -274,12 +276,27 @@ for (const rel of PREVIEW_FILES) {
 
 const readme = read("README.md")
 if (readme) {
+  if (readme.includes("README_IMPORT_URL_PLACEHOLDER")) {
+    fail(
+      "README.md: still has README_IMPORT_URL_PLACEHOLDER — run npm run build:widget",
+    )
+  }
+  if (!readme.includes("chip-hero-light.svg")) {
+    fail("README.md: must embed chip-hero-light.svg banner")
+  }
+  if (!readme.includes("meoslabs.github.io/save-in-meos/readme-embed.html")) {
+    fail("README.md: must link to live readme-embed.html demo")
+  }
   for (const rel of PREVIEW_FILES) {
     const name = path.basename(rel)
-    if (!readme.includes(name)) {
-      fail(`README.md: must embed preview asset ${name} (CDN or relative)`)
+    if (name.endsWith(".svg") && !readme.includes(name)) {
+      fail(`README.md: must embed preview asset ${name}`)
     }
   }
+}
+
+if (!read("examples/readme-embed.html")) {
+  fail("Missing examples/readme-embed.html — live README widget demo")
 }
 
 // ── Default label lowercase ───────────────────────────────────────────────────

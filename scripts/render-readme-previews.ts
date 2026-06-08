@@ -10,6 +10,10 @@ import fs from "node:fs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
 import {
+  buildImportIntentV1,
+  buildMeosLink,
+} from "../src/import-intent-v1.js"
+import {
   MEOS_SAVE_ICON_ASPECT,
   SAVE_CHIP_PRESETS,
   resolveChipLabel,
@@ -79,10 +83,68 @@ function renderChipSvg(preset: SaveChipPreset, theme: PreviewTheme): string {
 `
 }
 
+/** Wide hero banner — centred default chip on light canvas. */
+function renderHeroBanner(): string {
+  const chip = SAVE_CHIP_PRESETS.default
+  const label = resolveChipLabel("default")
+  const colours = THEME.light
+  const height = chip.height ?? 31
+  const paddingX = chip.paddingX ?? 10
+  const radius = chip.radius ?? 2
+  const iconH = chip.iconSize ?? 16
+  const iconW = iconH * MEOS_SAVE_ICON_ASPECT
+  const labelW = estimateLabelWidth(label)
+  const chipW = paddingX + iconW + GAP + labelW + paddingX
+  const canvasW = 480
+  const canvasH = 88
+  const chipX = (canvasW - chipW) / 2
+  const chipY = (canvasH - height) / 2
+  const iconX = chipX + paddingX
+  const iconY = chipY + (height - iconH) / 2
+  const textX = iconX + iconW + GAP
+  const textY = chipY + height / 2 + FONT_SIZE * 0.36
+  const iconScale = iconH / 30.362297
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="${canvasW}" height="${canvasH}" viewBox="0 0 ${canvasW} ${canvasH}" role="img" aria-label="save in meos — click to try">
+  <title>save in meos</title>
+  <rect width="100%" height="100%" fill="${colours.canvas}" rx="8"/>
+  <rect x="${chipX}" y="${chipY}" width="${chipW}" height="${height}" rx="${radius}" fill="transparent" stroke="${colours.border}" stroke-width="1"/>
+  <g transform="translate(${iconX}, ${iconY}) scale(${iconScale})" fill="${colours.fg}">
+    <g transform="${LOGO_TRANSFORM}"><path d="${LOGO_PATH}"/></g>
+  </g>
+  <text x="${textX}" y="${textY}" fill="${colours.fg}" font-family="${FONT}" font-size="${FONT_SIZE}" font-weight="500" letter-spacing="0.02em">${label}</text>
+</svg>
+`
+}
+
 function writePreview(name: string, svg: string): void {
   const file = path.join(OUT_DIR, name)
   fs.writeFileSync(file, svg, "utf8")
   console.log(`render-readme-previews: ${path.relative(ROOT, file)}`)
+}
+
+const README_DEMO_U = "https://github.com/meoslabs/save-in-meos"
+const README_DEMO_W = "github-readme"
+
+const README_IMPORT_PLACEHOLDER = "README_IMPORT_URL_PLACEHOLDER"
+
+function patchReadmeImportUrl(importUrl: string): void {
+  const readmePath = path.join(ROOT, "README.md")
+  if (!fs.existsSync(readmePath)) return
+  const content = fs.readFileSync(readmePath, "utf8")
+  if (!content.includes(README_IMPORT_PLACEHOLDER)) {
+    console.warn(
+      "render-readme-previews: README_IMPORT_URL_PLACEHOLDER not found — skip patch",
+    )
+    return
+  }
+  fs.writeFileSync(
+    readmePath,
+    content.replaceAll(README_IMPORT_PLACEHOLDER, importUrl),
+    "utf8",
+  )
+  console.log("render-readme-previews: patched README import URL")
 }
 
 fs.mkdirSync(OUT_DIR, { recursive: true })
@@ -95,5 +157,14 @@ for (const preset of ["default", "compact"] as const) {
     )
   }
 }
+
+writePreview("chip-hero-light.svg", renderHeroBanner())
+
+const importUrl = buildMeosLink(
+  buildImportIntentV1({ u: README_DEMO_U }),
+  README_DEMO_W,
+)
+fs.writeFileSync(path.join(OUT_DIR, "readme-import-url.txt"), `${importUrl}\n`, "utf8")
+patchReadmeImportUrl(importUrl)
 
 console.log("render-readme-previews: OK")

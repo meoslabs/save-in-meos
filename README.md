@@ -5,138 +5,119 @@
 [![CI](https://github.com/meoslabs/save-in-meos/actions/workflows/ci.yml/badge.svg)](https://github.com/meoslabs/save-in-meos/actions/workflows/ci.yml)
 [![license](https://img.shields.io/npm/l/@meoslabs/save-in-meos.svg?style=flat-square)](LICENSE)
 [![live demo](https://img.shields.io/badge/demo-GitHub%20Pages-0366d6?style=flat-square)](https://meoslabs.github.io/save-in-meos/)
-[![jsDelivr hits](https://data.jsdelivr.com/v1/package/npm/@meoslabs/save-in-meos/badge)](https://www.jsdelivr.com/package/npm/@meoslabs/save-in-meos)
+[![jsDelivr](https://data.jsdelivr.com/v1/package/npm/@meoslabs/save-in-meos/badge?style=flat-square)](https://www.jsdelivr.com/package/npm/@meoslabs/save-in-meos)
 
-**meos deeplink protocol (MDP)** codec and **save in meos** embed widget for third-party sites.
+<p align="center">
+  <a
+    href="https://meos.do/databox:import:q1bKVrJSKlXSAWIrpYySkoJiK3399MySjNIkveT8XP3c1PzinMSkYv3ixLJU3cw8XZCAUi0A?w=github-readme"
+    title="Try it — saves this repository into meos"
+  >
+    <img
+      src="assets/preview/chip-hero-light.svg"
+      alt="save in meos — click to open a real meos import link"
+      width="480"
+    />
+  </a>
+</p>
 
-Let visitors save a page (or a quote from it) into [meos](https://meos.do) with one tap. This package builds canonical import URLs and ships a branded, self-contained button you can drop into any site — via npm, a script tag, or programmatic imports only.
+<p align="center">
+  <strong>↑ Click the chip</strong> — opens a real <code>meos.do</code> import for this repo.<br />
+  <a href="https://meoslabs.github.io/save-in-meos/readme-embed.html?w=github-readme"><strong>Live widget demo →</strong></a>
+  &nbsp;·&nbsp;
+  <a href="https://meoslabs.github.io/save-in-meos/">all interactive examples</a>
+</p>
 
-## Widget preview
+---
 
-Static SVG previews of the branded chip (regenerated from widget SSOT on `npm run build:widget`). The live widget matches these presets — closed shadow DOM, Inconsolata, vector meos mark.
+**One tap. Any page. Into [meos](https://meos.do).**
 
-<!-- CDN_PREVIEW: pin @VERSION when cutting a release -->
-<table>
-  <thead>
-    <tr>
-      <th></th>
-      <th><code>default</code> — save in meos</th>
-      <th><code>compact</code> — save</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>light</strong></td>
-      <td align="center">
-        <img
-          src="https://cdn.jsdelivr.net/npm/@meoslabs/save-in-meos@0.0.4/assets/preview/chip-default-light.svg"
-          alt="save in meos chip — default preset, light theme"
-          height="55"
-        />
-      </td>
-      <td align="center">
-        <img
-          src="https://cdn.jsdelivr.net/npm/@meoslabs/save-in-meos@0.0.4/assets/preview/chip-compact-light.svg"
-          alt="save chip — compact preset, light theme"
-          height="52"
-        />
-      </td>
-    </tr>
-    <tr>
-      <td><strong>dark</strong></td>
-      <td align="center">
-        <img
-          src="https://cdn.jsdelivr.net/npm/@meoslabs/save-in-meos@0.0.4/assets/preview/chip-default-dark.svg"
-          alt="save in meos chip — default preset, dark theme"
-          height="55"
-        />
-      </td>
-      <td align="center">
-        <img
-          src="https://cdn.jsdelivr.net/npm/@meoslabs/save-in-meos@0.0.4/assets/preview/chip-compact-dark.svg"
-          alt="save chip — compact preset, dark theme"
-          height="52"
-        />
-      </td>
-    </tr>
-  </tbody>
-</table>
+Drop a branded **save in meos** chip into your share row, toolbar, or blog post. Visitors tap it → meos opens with a canonical import URL — page URL, optional quote, and **your site name in `?w=`** for provenance.
 
-Preview assets also ship in-repo at [`assets/preview/`](assets/preview/) and on [jsDelivr](https://cdn.jsdelivr.net/npm/@meoslabs/save-in-meos@0.0.4/assets/preview/chip-default-light.svg).
+No build step required for script-tag embeds. npm package for bundlers. MDP codec if you only need the link.
 
-## How to integrate
+---
 
-| Use case | How |
-|----------|-----|
-| **npm / bundler** | `npm install @meoslabs/save-in-meos` then `import { initSaveButton } from '@meoslabs/save-in-meos'` |
-| **Script tag (CDN)** | Pin `https://unpkg.com/@meoslabs/save-in-meos@VERSION/dist/widget.iife.js` + `fonts.css` — see [`examples/cdn-demo.html`](examples/cdn-demo.html) |
-| **Programmatic only** | `import { buildMeosLink, buildImportIntentV1 } from '@meoslabs/save-in-meos'` — no widget CSS required |
-| **Live demo** | [meoslabs.github.io/save-in-meos](https://meoslabs.github.io/save-in-meos/) (GitHub Pages) |
-| **Local demo** | `npm run demo` → `http://localhost:4173/demo?local=1` |
+## Try it now
 
-CDN mirrors (auto-indexed from npm — no separate account):
+| What | How |
+|------|-----|
+| **In this README** | Click the banner above — real import link (GitHub blocks `<script>`, so this is a linked chip that opens meos) |
+| **Live widget** | [readme-embed.html](https://meoslabs.github.io/save-in-meos/readme-embed.html?u=https://github.com/meoslabs/save-in-meos&w=github-readme) — full interactive chip |
+| **On your machine** | `npm run demo` → http://localhost:4173 |
 
-- **unpkg:** `https://unpkg.com/@meoslabs/save-in-meos@VERSION/dist/widget.iife.js`
-- **jsDelivr:** `https://cdn.jsdelivr.net/npm/@meoslabs/save-in-meos@VERSION/dist/widget.iife.js`
+---
 
-Alias: `dist/save-in-meos.min.js` (identical minified IIFE).
+## Put it on your site
 
-## Widget appearance
+You configure **three things**. The chip label is brand-fixed (see presets below) — not arbitrary custom text.
 
-The **save in meos** chip uses a **closed shadow root**. Integrators cannot change the label, font (Inconsolata), or logo SVG path. The logo is **vector** (from `assets/branding/meos-logo-charcoal-nostroke.svg`), rendered at **16px mark height** by default with the correct brand aspect ratio.
+| Option | Required? | What it does | Example |
+|--------|-----------|--------------|---------|
+| **`u`** | yes | Canonical URL to save into meos | `location.href` or article permalink |
+| **`widgetId`** | recommended | **Provenance** — your site id, carried as `?w=` on the import URL | `"my-blog"`, `"hn-reader"` |
+| **`chipPreset`** | no | Chip size + label variant | `"default"` or `"compact"` |
+| **`t`** | no | Optional quoted text (LITE tier) | User's text selection |
+| **`theme`** | no | `auto` · `light` · `dark` | `"dark"` on a dark toolbar |
 
-| Customisable | Fixed (brand) |
-|--------------|---------------|
-| `theme: "auto" \| "light" \| "dark"` | Font family + weight |
-| `chipPreset: "default" \| "compact"` | Logo SVG path |
-| Chip height (28–40px), padding, radius | Arbitrary label text |
-| Logo mark height (11–16px) | Logo animation (static mark only) |
+### Example — your article, your provenance id
 
-### Chip presets
+```html
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/@meoslabs/save-in-meos@0.0.4/src/widget/fonts.css"
+/>
+<div id="meos-save-mount"></div>
+<script src="https://unpkg.com/@meoslabs/save-in-meos@0.0.4/dist/widget.iife.js"></script>
+<script>
+  MeosSave.initSaveButton("#meos-save-mount", {
+    // 1) What to save
+    u: "https://yoursite.com/posts/decentralised-notes",
 
-Two presets only — pick size and label together:
+    // 2) Provenance — shows up as ?w=my-blog on the meos import URL
+    widgetId: "my-blog",
 
-| Preset | Visible label | Use when | Height | Padding X | Radius |
-|--------|---------------|----------|--------|-----------|--------|
-| `default` | **save in meos** | Share rows (default) | 31px | 10px | 2px |
-| `compact` | **save** | Dense toolbars | 28px | 8px | 2px |
+    // 3) Chip look (label is preset, not free text)
+    chipPreset: "default", // logo + "save in meos"
+    theme: "auto",
+  })
+</script>
+```
 
-`aria-label` is always **save in meos** (accessibility). Only the visible chip text shortens on `compact`.
+### Example — save a quote the user selected
 
-```ts
-initSaveButton("#meos-save-mount", {
-  u: location.href,
-  widgetId: "my-site",
-  theme: "dark",
-  chipPreset: "compact",
+```js
+MeosSave.initSaveButton("#meos-save-mount", {
+  u: "https://yoursite.com/posts/decentralised-notes",
+  t: window.getSelection()?.toString().trim() || undefined,
+  widgetId: "my-blog-quote-save",
+  chipPreset: "compact", // logo + "save"
 })
 ```
 
-Explicit `chip` fields override preset values. Prefer `chipPreset` over hand-rolled pixel values.
+When the user taps the chip, meos receives something like:
 
-**Theme:** `auto` follows OS `prefers-color-scheme`. Pin `light` or `dark` when your page theme differs from the OS.
-
-**Advanced shape via CSS on the mount host:**
-
-```css
-#meos-save-mount {
-  --meos-save-chip-height: 36px;
-  --meos-save-icon-size: 16px;
-}
+```http
+https://meos.do/databox:import:{encoded}?w=my-blog-quote-save
 ```
 
-**Live examples** ([GitHub Pages](https://meoslabs.github.io/save-in-meos/) or `npm run demo`):
+The **`widgetId` is how meos knows which integrator sent the import** — use a stable string per site or surface (not per user).
 
-| Demo | URL |
-|------|-----|
-| Index | https://meoslabs.github.io/save-in-meos/ |
-| Blog post embed | https://meoslabs.github.io/save-in-meos/demo.html?local=1 |
-| Theme + chip presets | https://meoslabs.github.io/save-in-meos/theme-demo.html |
-| CDN copy/paste snippet | https://meoslabs.github.io/save-in-meos/cdn-demo.html |
+### Label presets (not custom text)
 
-See [`docs/INTEGRATOR.md`](docs/INTEGRATOR.md) for the full widget API.
+| `chipPreset` | Visible label | Best for |
+|--------------|---------------|----------|
+| `default` | **save in meos** | Share rows, article footers |
+| `compact` | **save** | Dense toolbars |
 
-## Quick start — npm widget
+`aria-label` is always **save in meos**. Font, logo, and colours are brand-locked — you pick preset, theme, and bounded size tokens only.
+
+---
+
+## Quick start — npm
+
+```bash
+npm install @meoslabs/save-in-meos
+```
 
 ```ts
 import "@meoslabs/save-in-meos/fonts.css"
@@ -149,85 +130,146 @@ initSaveButton("#meos-save-mount", {
 })
 ```
 
-## Quick start — script tag
-
-```html
-<link rel="stylesheet" href="https://unpkg.com/@meoslabs/save-in-meos@0.0.4/src/widget/fonts.css" />
-<div id="meos-save-mount"></div>
-<script src="https://unpkg.com/@meoslabs/save-in-meos@0.0.4/dist/widget.iife.js"></script>
-<script>
-  MeosSave.initSaveButton("#meos-save-mount", {
-    u: location.href,
-    widgetId: "my-site",
-  })
-</script>
-```
-
-## Quick start — build links programmatically
+## Quick start — links only (no widget)
 
 ```ts
-import {
-  buildMeosLink,
-  buildImportIntentV1,
-  decodeMeosLink,
-  type ImportIntentV1,
-} from "@meoslabs/save-in-meos"
+import { buildMeosLink, buildImportIntentV1 } from "@meoslabs/save-in-meos"
 
-const intent = buildImportIntentV1({
-  u: "https://example.com/article",
-  t: "Optional selected quote",
-})
-
-const url = buildMeosLink(intent, "my-widget")
-const roundtrip = decodeMeosLink(url)
+const url = buildMeosLink(
+  buildImportIntentV1({
+    u: "https://example.com/article",
+    t: "Optional pull-quote",
+  }),
+  "my-site", // → ?w=my-site
+)
 ```
 
-See [`docs/INTEGRATOR.md`](docs/INTEGRATOR.md) for tiers, branding rules, and Universal Links.
+---
+
+## Chip gallery
+
+<p align="center">
+  <a href="https://meos.do/databox:import:q1bKVrJSKlXSAWIrpYySkoJiK3399MySjNIkveT8XP3c1PzinMSkYv3ixLJU3cw8XZCAUi0A?w=github-readme">
+    <img
+      src="assets/preview/chip-default-light.svg"
+      alt="default · light"
+      height="55"
+    />
+  </a>
+  <a href="https://meoslabs.github.io/save-in-meos/readme-embed.html?preset=compact&w=github-readme-gallery">
+    <img
+      src="assets/preview/chip-compact-light.svg"
+      alt="compact · light — live widget"
+      height="52"
+    />
+  </a>
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th></th>
+      <th><code>default</code></th>
+      <th><code>compact</code></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>light</strong></td>
+      <td align="center">
+        <a href="https://meos.do/databox:import:q1bKVrJSKlXSAWIrpYySkoJiK3399MySjNIkveT8XP3c1PzinMSkYv3ixLJU3cw8XZCAUi0A?w=github-readme">
+          <img
+            src="assets/preview/chip-default-light.svg"
+            alt="default light"
+            height="55"
+          />
+        </a>
+      </td>
+      <td align="center">
+        <a href="https://meoslabs.github.io/save-in-meos/readme-embed.html?preset=compact&theme=light&w=github-readme">
+          <img
+            src="assets/preview/chip-compact-light.svg"
+            alt="compact light"
+            height="52"
+          />
+        </a>
+      </td>
+    </tr>
+    <tr>
+      <td><strong>dark</strong></td>
+      <td align="center">
+        <a href="https://meos.do/databox:import:q1bKVrJSKlXSAWIrpYySkoJiK3399MySjNIkveT8XP3c1PzinMSkYv3ixLJU3cw8XZCAUi0A?w=github-readme">
+          <img
+            src="assets/preview/chip-default-dark.svg"
+            alt="default dark"
+            height="55"
+          />
+        </a>
+      </td>
+      <td align="center">
+        <a href="https://meoslabs.github.io/save-in-meos/readme-embed.html?preset=compact&theme=dark&w=github-readme">
+          <img
+            src="assets/preview/chip-compact-dark.svg"
+            alt="compact dark"
+            height="52"
+          />
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<sub>Left column chips open a real meos import. Right column opens the <a href="https://meoslabs.github.io/save-in-meos/readme-embed.html">live widget</a>.</sub>
+
+---
+
+## CDN
+
+Pin the version — never use `@latest` in production.
+
+| Mirror | Widget IIFE | Fonts |
+|--------|-------------|-------|
+| **unpkg** | `https://unpkg.com/@meoslabs/save-in-meos@0.0.4/dist/widget.iife.js` | `…/src/widget/fonts.css` |
+| **jsDelivr** | `https://cdn.jsdelivr.net/npm/@meoslabs/save-in-meos@0.0.4/dist/widget.iife.js` | same path |
+
+Alias: `dist/save-in-meos.min.js` (identical bundle).
+
+---
 
 ## What is MDP?
 
-The **meos deeplink protocol** encodes an import intent — URL, optional quoted text, images — into a compact `https://meos.do/databox:import:…` link. Widget attribution travels in the `?w=` query param.
+The **meos deeplink protocol** encodes an import intent into `https://meos.do/databox:import:…`. Widget attribution rides in **`?w={widgetId}`**.
 
 | Tier | Use when |
 |------|----------|
 | **REF** | Page URL only |
-| **LITE** | URL + selected quote text |
+| **LITE** | URL + quoted text (`t`) |
 | **IMG** | URL + image URLs |
-| **FULL** | URL + structured blocks (advanced) |
+| **FULL** | Structured blocks (advanced) |
+
+---
 
 ## Development
 
 ```bash
 npm install
-npm run build
-npm run build:widget   # dist/widget.iife.js for CDN / script tag
-npm run demo           # build + serve examples (local widget demos)
-npm test
-npm run check:mdp          # contract + branding gates
-npm run check:public-scrub # no internal paths / secrets in docs
-npm run check:ci           # GitHub Actions workflow ratchet
+npm run build && npm run build:widget
+npm test && npm run check:mdp
+npm run demo    # http://localhost:4173
 ```
 
-## Publishing
+After bumping `package.json` version: **`npm run version:sync`**.
 
-See [`docs/PUBLISHING.md`](docs/PUBLISHING.md) for the full checklist. Summary:
-
-1. **npm scope** — publish as `@meoslabs/save-in-meos` (or `@meos/…` if the org scope is available on npmjs.com)
-2. **First publish** — `npm login` → `npm publish --access public` (or GitHub Release → OIDC trusted publishing)
-3. **CDN** — unpkg/jsDelivr index the npm tarball automatically; pin `VERSION` in integrator HTML
-4. **Optional** — `meo cdn put dist/widget.iife.js` only if you also want a copy on `static.usemeos.com` (separate from npm mirrors)
+---
 
 ## Docs
 
-| Doc | Audience |
-|-----|----------|
-| [`docs/INTEGRATOR.md`](docs/INTEGRATOR.md) | Site owners embedding the widget |
-| [`docs/PUBLISHING.md`](docs/PUBLISHING.md) | Maintainers — npm publish + CI secrets |
-| [`docs/QA-MDP-SMOKE.md`](docs/QA-MDP-SMOKE.md) | Smoke-test this package before release |
-| [`docs/RELEASE-MDP-DEEPLINKS.md`](docs/RELEASE-MDP-DEEPLINKS.md) | App Links / Universal Links for integrators |
-| [`CONTRIBUTING.md`](CONTRIBUTING.md) | meoslabs contributors |
+| Doc | For |
+|-----|-----|
+| [`docs/INTEGRATOR.md`](docs/INTEGRATOR.md) | Full widget API + branding rules |
+| [`docs/PUBLISHING.md`](docs/PUBLISHING.md) | npm release + CI |
+| [`CONTRIBUTING.md`](CONTRIBUTING.md) | Contributors |
 
 ## Licence
 
-- **Code:** [MIT](LICENSE)
-- **Fonts:** Inconsolata [OFL-1.1](assets/fonts/inconsolata/OFL.txt) (bundled in the package)
+MIT · Inconsolata [OFL-1.1](assets/fonts/inconsolata/OFL.txt)

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>save in meos — live embed</title>
+    <link rel="stylesheet" href="./vendor/fonts.css" />
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #fff;
+        --fg: #000;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #151515;
+          --fg: #fff;
+        }
+      }
+      body {
+        font-family: var(--meos-font, ui-monospace, monospace);
+        background: var(--bg);
+        color: var(--fg);
+        margin: 0;
+        padding: 1.25rem;
+        line-height: 1.5;
+        min-height: 100vh;
+        box-sizing: border-box;
+      }
+      main {
+        max-width: 36rem;
+        margin: 0 auto;
+      }
+      h1 {
+        font-size: 1rem;
+        font-weight: 500;
+        margin: 0 0 0.75rem;
+      }
+      p {
+        font-size: 0.8rem;
+        opacity: 0.8;
+        margin: 0 0 1rem;
+      }
+      .chip-row {
+        margin: 1rem 0 1.25rem;
+      }
+      code {
+        font-size: 0.75rem;
+        word-break: break-all;
+      }
+      a {
+        color: inherit;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Live save in meos chip</h1>
+      <p>
+        This is the real widget — tap the chip to open a meos import. Query
+        params configure the demo:
+        <code>?u=</code> <code>?w=</code> <code>?preset=</code>
+        <code>?theme=</code> <code>?t=</code>
+      </p>
+      <div class="chip-row" id="meos-save-mount"></div>
+      <p id="meta"></p>
+      <p>
+        <a href="./index.html">← all demos</a>
+      </p>
+    </main>
+    <script src="./vendor/widget.iife.js"></script>
+    <script>
+      ;(function () {
+        var params = new URLSearchParams(location.search)
+        var u =
+          params.get("u") || "https://github.com/meoslabs/save-in-meos"
+        var widgetId = params.get("w") || "github-readme"
+        var theme = params.get("theme") || "auto"
+        var preset = params.get("preset") === "compact" ? "compact" : "default"
+        var t = params.get("t") || undefined
+
+        var opts = {
+          u: u,
+          widgetId: widgetId,
+          theme: theme,
+          chipPreset: preset,
+        }
+        if (t) opts.t = t
+
+        MeosSave.initSaveButton("#meos-save-mount", opts)
+
+        document.getElementById("meta").textContent =
+          "u=" +
+          u +
+          " · widgetId=" +
+          widgetId +
+          (t ? ' · t="' + t + '"' : "")
+      })()
+    </script>
+  </body>
+</html>

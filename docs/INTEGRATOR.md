@@ -51,6 +51,36 @@ initSaveButton("#meos-save-mount", {
 
 The default chip label is **save in meos**. The only shorter variant is `chipPreset: "compact"` → visible **save** (logo + save). There is no arbitrary `label` option. Font and logo path are not customisable. Logo is **vector SVG** at **16px** mark height.
 
+### `widgetId` — provenance on every import
+
+Pass a **stable string per site or surface** (not per user). It becomes `?w=` on the meos import URL so meos can attribute which integrator sent the save.
+
+```ts
+initSaveButton("#meos-save-mount", {
+  u: "https://yoursite.com/article",
+  widgetId: "my-blog", // → …/databox:import:…?w=my-blog
+})
+```
+
+Use different ids when you want to distinguish surfaces on the same domain (e.g. `"my-blog-toolbar"` vs `"my-blog-footer"`).
+
+### `u` and optional quote `t`
+
+| Field | Role |
+|-------|------|
+| `u` | Canonical page URL to import (required) |
+| `t` | Optional selected quote — upgrades tier to LITE |
+| `widgetId` | Provenance `?w=` (recommended) |
+
+```ts
+initSaveButton("#meos-save-mount", {
+  u: location.href,
+  t: window.getSelection()?.toString().trim() || undefined,
+  widgetId: "my-blog-selection",
+  chipPreset: "compact",
+})
+```
+
 ### Theme (light / dark / auto)
 
 ```ts
