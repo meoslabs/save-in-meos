@@ -1,5 +1,12 @@
 # @meoslabs/save-in-meos
 
+[![npm version](https://img.shields.io/npm/v/@meoslabs/save-in-meos.svg?style=flat-square)](https://www.npmjs.com/package/@meoslabs/save-in-meos)
+[![bundle size](https://img.shields.io/bundlephobia/minzip/@meoslabs/save-in-meos?style=flat-square)](https://bundlephobia.com/package/@meoslabs/save-in-meos)
+[![CI](https://github.com/meoslabs/save-in-meos/actions/workflows/ci.yml/badge.svg)](https://github.com/meoslabs/save-in-meos/actions/workflows/ci.yml)
+[![license](https://img.shields.io/npm/l/@meoslabs/save-in-meos.svg?style=flat-square)](LICENSE)
+[![live demo](https://img.shields.io/badge/demo-GitHub%20Pages-0366d6?style=flat-square)](https://meoslabs.github.io/save-in-meos/)
+[![jsDelivr hits](https://data.jsdelivr.com/v1/package/npm/@meoslabs/save-in-meos/badge)](https://www.jsdelivr.com/package/npm/@meoslabs/save-in-meos)
+
 **meos deeplink protocol (MDP)** codec and **save in meos** embed widget for third-party sites.
 
 Let visitors save a page (or a quote from it) into [meos](https://meos.do) with one tap. This package builds canonical import URLs and ships a branded, self-contained button you can drop into any site — via npm, a script tag, or programmatic imports only.
@@ -22,14 +29,14 @@ Static SVG previews of the branded chip (regenerated from widget SSOT on `npm ru
       <td><strong>light</strong></td>
       <td align="center">
         <img
-          src="https://cdn.jsdelivr.net/npm/@meoslabs/save-in-meos@0.0.3/assets/preview/chip-default-light.svg"
+          src="https://cdn.jsdelivr.net/npm/@meoslabs/save-in-meos@0.0.4/assets/preview/chip-default-light.svg"
           alt="save in meos chip — default preset, light theme"
           height="55"
         />
       </td>
       <td align="center">
         <img
-          src="https://cdn.jsdelivr.net/npm/@meoslabs/save-in-meos@0.0.3/assets/preview/chip-compact-light.svg"
+          src="https://cdn.jsdelivr.net/npm/@meoslabs/save-in-meos@0.0.4/assets/preview/chip-compact-light.svg"
           alt="save chip — compact preset, light theme"
           height="52"
         />
@@ -39,14 +46,14 @@ Static SVG previews of the branded chip (regenerated from widget SSOT on `npm ru
       <td><strong>dark</strong></td>
       <td align="center">
         <img
-          src="https://cdn.jsdelivr.net/npm/@meoslabs/save-in-meos@0.0.3/assets/preview/chip-default-dark.svg"
+          src="https://cdn.jsdelivr.net/npm/@meoslabs/save-in-meos@0.0.4/assets/preview/chip-default-dark.svg"
           alt="save in meos chip — default preset, dark theme"
           height="55"
         />
       </td>
       <td align="center">
         <img
-          src="https://cdn.jsdelivr.net/npm/@meoslabs/save-in-meos@0.0.3/assets/preview/chip-compact-dark.svg"
+          src="https://cdn.jsdelivr.net/npm/@meoslabs/save-in-meos@0.0.4/assets/preview/chip-compact-dark.svg"
           alt="save chip — compact preset, dark theme"
           height="52"
         />
@@ -55,7 +62,7 @@ Static SVG previews of the branded chip (regenerated from widget SSOT on `npm ru
   </tbody>
 </table>
 
-Preview assets also ship in-repo at [`assets/preview/`](assets/preview/) and on [jsDelivr](https://cdn.jsdelivr.net/npm/@meoslabs/save-in-meos@0.0.3/assets/preview/chip-default-light.svg).
+Preview assets also ship in-repo at [`assets/preview/`](assets/preview/) and on [jsDelivr](https://cdn.jsdelivr.net/npm/@meoslabs/save-in-meos@0.0.4/assets/preview/chip-default-light.svg).
 
 ## How to integrate
 
@@ -64,7 +71,8 @@ Preview assets also ship in-repo at [`assets/preview/`](assets/preview/) and on 
 | **npm / bundler** | `npm install @meoslabs/save-in-meos` then `import { initSaveButton } from '@meoslabs/save-in-meos'` |
 | **Script tag (CDN)** | Pin `https://unpkg.com/@meoslabs/save-in-meos@VERSION/dist/widget.iife.js` + `fonts.css` — see [`examples/cdn-demo.html`](examples/cdn-demo.html) |
 | **Programmatic only** | `import { buildMeosLink, buildImportIntentV1 } from '@meoslabs/save-in-meos'` — no widget CSS required |
-| **Local demo** | `npm run demo` then open `http://localhost:4173/demo?local=1` (stages `examples/vendor/` via `build:widget`) |
+| **Live demo** | [meoslabs.github.io/save-in-meos](https://meoslabs.github.io/save-in-meos/) (GitHub Pages) |
+| **Local demo** | `npm run demo` → `http://localhost:4173/demo?local=1` |
 
 CDN mirrors (auto-indexed from npm — no separate account):
 
@@ -117,13 +125,14 @@ Explicit `chip` fields override preset values. Prefer `chipPreset` over hand-rol
 }
 ```
 
-**Live examples** (after `npm run demo`):
+**Live examples** ([GitHub Pages](https://meoslabs.github.io/save-in-meos/) or `npm run demo`):
 
 | Demo | URL |
 |------|-----|
-| Blog post embed | `http://localhost:4173/demo.html?local=1` |
-| Theme + chip presets | `http://localhost:4173/theme-demo.html` |
-| CDN copy/paste snippet | `http://localhost:4173/cdn-demo.html` |
+| Index | https://meoslabs.github.io/save-in-meos/ |
+| Blog post embed | https://meoslabs.github.io/save-in-meos/demo.html?local=1 |
+| Theme + chip presets | https://meoslabs.github.io/save-in-meos/theme-demo.html |
+| CDN copy/paste snippet | https://meoslabs.github.io/save-in-meos/cdn-demo.html |
 
 See [`docs/INTEGRATOR.md`](docs/INTEGRATOR.md) for the full widget API.
 
@@ -143,9 +152,9 @@ initSaveButton("#meos-save-mount", {
 ## Quick start — script tag
 
 ```html
-<link rel="stylesheet" href="https://unpkg.com/@meoslabs/save-in-meos@0.0.3/src/widget/fonts.css" />
+<link rel="stylesheet" href="https://unpkg.com/@meoslabs/save-in-meos@0.0.4/src/widget/fonts.css" />
 <div id="meos-save-mount"></div>
-<script src="https://unpkg.com/@meoslabs/save-in-meos@0.0.3/dist/widget.iife.js"></script>
+<script src="https://unpkg.com/@meoslabs/save-in-meos@0.0.4/dist/widget.iife.js"></script>
 <script>
   MeosSave.initSaveButton("#meos-save-mount", {
     u: location.href,

@@ -12,3 +12,6 @@ npm run check:widget-branding
 
 echo "🔍 save-in-meos: typecheck..."
 npm run typecheck
+
+echo "📌 save-in-meos: version pins..."
+npm run check:version-pins

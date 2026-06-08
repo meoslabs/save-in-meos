@@ -1,17 +1,87 @@
 # Publishing @meoslabs/save-in-meos
 
-How maintainers ship npm releases and CDN mirrors for integrators.
+How maintainers ship npm releases, CDN mirrors, and the GitHub Pages demo.
 
 ---
 
 ## TL;DR
 
 1. Merge to `main` with CI green
-2. Bump `version` in `package.json` + commit
-3. Pin `VERSION` in `examples/demo.html` and `examples/cdn-demo.html`
-4. Create a GitHub Release (tag = semver, e.g. `v0.0.2`)
-5. The **Release** workflow builds, verifies, and `npm publish`
-6. unpkg and jsDelivr index the tarball automatically — no extra CDN account
+2. `npm version patch` (or edit `package.json` manually)
+3. **`npm run version:sync`** — updates README, docs, examples, lockfile, rebuilds widget
+4. Commit + push to `main`
+5. Create **GitHub Release** tag `vX.Y.Z` matching `package.json`
+6. `release.yml` → `npm publish` via OIDC → unpkg / jsDelivr index automatically
+7. GitHub Pages redeploys demos on every `main` push (`pages.yml`)
+
+---
+
+## Version pins (single source of truth)
+
+`package.json#version` is canonical. These files must match:
+
+| File | What gets synced |
+|------|------------------|
+| `README.md` | `@meoslabs/save-in-meos@X.Y.Z` CDN URLs |
+| `docs/INTEGRATOR.md` | CDN examples |
+| `examples/cdn-demo.html` | unpkg / jsDelivr pins |
+| `examples/demo.html` | `var VERSION = "X.Y.Z"` |
+| `package-lock.json` | root `version` field |
+| `dist/widget.iife.js` | `__MEOS_SAVE_VERSION__` (via `build:widget`) |
+
+```bash
+npm version patch          # bumps package.json + git tag (optional)
+npm run version:sync       # sync pins + rebuild widget
+npm run check:version-pins # ratchet — also runs in pre-commit
+```
+
+**Never hand-edit CDN pins** across six files — use `version:sync`.
+
+### Version history (bootstrap mess — resolved)
+
+| Version | What happened |
+|---------|----------------|
+| `0.0.1` | First manual bootstrap publish |
+| `0.0.2` | Accidental empty publish during org visibility fix — **slot burned** on npm |
+| `0.0.3` | Current `latest` — readme preview SVGs, public package |
+
+GitHub Releases `v0.0.1` / `v0.0.2` exist but CI publish failed (see OIDC below). **Trust npm `latest`, not orphan GitHub release tags.**
+
+---
+
+## OIDC / CI publish failures (E404)
+
+### Symptom
+
+```
+npm notice publish Signed provenance statement ...
+npm error 404 Not Found - PUT https://registry.npmjs.org/@meoslabs%2fsave-in-meos
+```
+
+### Root causes (check in order)
+
+| # | Cause | Fix |
+|---|--------|-----|
+| 1 | **npm CLI too old** — Node 20 ships npm 10; OIDC needs **npm ≥ 11.5.1** | `release.yml` now runs `npm install -g npm@11.6.2` before publish |
+| 2 | **Trusted Publisher not on package** | npm → `@meoslabs/save-in-meos` → Settings → Trusted Publisher → `release.yml`, env blank |
+| 3 | **Bootstrap publish missing** | First version must be manual (`Path A` below) |
+| 4 | **Org scoped default private** | `npm access set status=public @meoslabs/save-in-meos` after manual publish |
+
+npm returns **404** for both “package missing” and “OIDC handshake failed” — misleading. Provenance signing before the 404 means OIDC token exchange partially worked; usually cause **#1** or **#2**.
+
+### Verify OIDC path (no publish)
+
+```bash
+gh workflow run release.yml --repo meoslabs/save-in-meos -f dry_run=true
+```
+
+### Re-publish after fix (tag already exists)
+
+```bash
+gh workflow run release.yml --repo meoslabs/save-in-meos -f dry_run=false
+```
+
+Only works if the version is **not** already on npm.
 
 ---
 
@@ -21,46 +91,22 @@ How maintainers ship npm releases and CDN mirrors for integrators.
 
 | Step | Action |
 |------|--------|
-| Account | [npmjs.com signup](https://www.npmjs.com/signup) — org **`meoslabs`** exists |
-| Scope | Prefer **`@meoslabs/save-in-meos`** if `@meos` is unavailable; update `package.json` `name` before first publish |
-| Access | Org member with publish rights on the package |
-
-First publish of a scoped package requires `--access public` (included in CI and examples below).
+| Account | [npmjs.com](https://www.npmjs.com) — org **`meoslabs`** |
+| Package | `@meoslabs/save-in-meos` |
+| Access | Org member with publish rights |
 
 ### Path A — manual first publish (**required once**)
 
-npm **cannot** attach Trusted Publishing until the package exists on the registry.
-The first version must be published manually; CI/OIDC handles every release after
-trusted publisher is linked.
-
 ```bash
-npm login                    # meoslabs org member, 2FA on
+npm login
 npm run prepublishOnly
 npm publish --access public --provenance=false
-# If the meoslabs org defaults scoped packages to private, also run:
-npm access set status=public @meoslabs/save-in-meos
+npm access set status=public @meoslabs/save-in-meos   # if org defaults scoped → private
 ```
 
-Do **not** use `--provenance` on the bootstrap publish — provenance is CI/OIDC only.
+### Path B — CI publish (after bootstrap + Trusted Publisher)
 
-Smoke-test CDN after a few minutes:
-
-```bash
-curl -sI "https://unpkg.com/@meoslabs/save-in-meos@0.0.1/dist/widget.iife.js" | head -1
-# expect HTTP/2 200 once published and propagated
-```
-
-Open in browser and confirm `typeof MeosSave.initSaveButton === "function"` (not `MeosSave.default`).
-
-### Path B — CI publish (recommended — **use this**)
-
-**OIDC trusted publishing** (`release.yml` — no `NPM_TOKEN` secret):
-
-#### One-time: your actions on npmjs.com (~2 minutes)
-
-1. Log in at [npmjs.com](https://www.npmjs.com) as a **`meoslabs` org member** with publish rights.
-2. Open **meoslabs** org → **Packages** (or [npm trusted publishers](https://www.npmjs.com/settings/meoslabs/publishing)).
-3. **Add trusted publisher** → **GitHub Actions** and enter **exactly**:
+**npmjs.com** → `@meoslabs/save-in-meos` → **Trusted Publisher**:
 
 | Field | Value |
 |--------|--------|
@@ -69,128 +115,64 @@ Open in browser and confirm `typeof MeosSave.initSaveButton === "function"` (not
 | Workflow filename | `release.yml` |
 | Environment | *(leave blank)* |
 
-4. Open **@meoslabs/save-in-meos** → **Settings** → **Trusted Publisher** → add the GitHub Actions connection above.
+No `NPM_TOKEN` secret. Workflow uses `id-token: write` + `npm publish --provenance --access public`.
 
-**Prerequisite:** Path A bootstrap publish must have run first (package must exist).
+---
 
-No automation token. No GitHub secret. The workflow uses `id-token: write` + `npm publish --provenance --access public`.
+## GitHub Pages demo
 
-#### One-time: GitHub (usually already done)
+| Workflow | Trigger | Output |
+|----------|---------|--------|
+| [`pages.yml`](../.github/workflows/pages.yml) | push to `main` | https://meoslabs.github.io/save-in-meos/ |
 
-- **Actions** enabled on `meoslabs/save-in-meos`
-- Default branch **`main`**
+**One-time repo setting:** Settings → Pages → Build and deployment → **Source: GitHub Actions**.
 
-#### Every release (automated)
+`pages.yml` runs `build:widget` (stages `examples/vendor/`) then deploys `examples/`.
 
-1. Merge to `main` with CI green
-2. Bump `version` in `package.json` (commit to `main`)
-3. Create **GitHub Release** with tag **`vX.Y.Z`** matching `package.json` (e.g. `v0.0.1`)
-4. `release.yml` runs → verifies → `npm publish`
-5. unpkg / jsDelivr pick up the tarball within minutes
+---
 
-**Dry run** (no publish): Actions → Release → Run workflow → `dry_run: true`
+## GitHub Actions summary
 
-**Manual publish trigger** (after trusted publisher is set): Run workflow → `dry_run: false` on `main`.
+| Workflow | Trigger | What it does |
+|----------|---------|--------------|
+| [`ci.yml`](../.github/workflows/ci.yml) | PR + push `main` / `develop` | verify + build |
+| [`release.yml`](../.github/workflows/release.yml) | Release published / manual | verify + npm publish (OIDC) |
+| [`pages.yml`](../.github/workflows/pages.yml) | push `main` | live demos |
 
-```bash
-gh workflow run release.yml --repo meoslabs/save-in-meos -f dry_run=false
-```
-
-### First publish failed with `E404 Not Found`?
-
-If CI logs show provenance signed but:
-
-```
-npm error 404 Not Found - PUT ... @meoslabs/save-in-meos - Not found
-```
-
-**Cause:** npm **Trusted Publisher** is not linked yet (OIDC auth worked; npm rejected the package create).
-
-**Fix:**
-
-1. Complete the [one-time npmjs.com steps](#one-time-your-actions-on-npmjscom-2-minutes) above.
-2. Re-run publish (release tag already exists — use workflow dispatch):
-
-```bash
-gh workflow run release.yml --repo meoslabs/save-in-meos -f dry_run=false
-```
-
-3. Verify:
-
-```bash
-npm view @meoslabs/save-in-meos version
-curl -sI "https://unpkg.com/@meoslabs/save-in-meos@0.0.1/dist/widget.iife.js" | head -3
-```
+All Node jobs upgrade to **npm 11.6.2** before `npm ci` (OIDC parity).
 
 ---
 
 ## What gets published
 
-The `files` whitelist in `package.json` ships:
+See `package.json#files`. Includes `dist/*`, widget CSS/fonts, `assets/preview/` (readme chip SVGs).
 
-| Artifact | Purpose |
-|----------|---------|
-| `dist/index.js` + `.d.ts` | npm / bundler entry |
-| `dist/widget.iife.js` | CDN / script tag (`unpkg` + `jsdelivr` fields) |
-| `dist/save-in-meos.min.js` | Documented alias (same bundle) |
-| `dist/widget.iife.css` | Optional external stylesheet |
-| `src/widget/fonts.css` + `assets/fonts/` | Bundled Inconsolata (OFL) |
-| `src/widget/widget.css` | npm `widget.css` export |
-
-`prepublishOnly` runs `build`, `build:widget`, `check:mdp`, and `check:public-scrub` before every publish.
-
-`build:widget` asserts `MeosSave.initSaveButton` is on the global flat object (guards against `export default` regressions).
+`prepublishOnly`: build, widget, MDP checks, public scrub, **version pin check**.
 
 ---
 
 ## CDN (unpkg / jsDelivr)
 
-No separate CDN account is needed. Both mirrors read from the npm registry:
-
 ```
 https://unpkg.com/@meoslabs/save-in-meos@VERSION/dist/widget.iife.js
-https://cdn.jsdelivr.net/npm/@meoslabs/save-in-meos@VERSION/dist/widget.iife.js
+https://cdn.jsdelivr.net/npm/@meoslabs/save-in-meos@VERSION/assets/preview/chip-default-light.svg
 ```
 
-Integrators must **pin the version** in production. Bump pins in `examples/cdn-demo.html` and `examples/demo.html` when cutting a release.
-
-### Optional: static.usemeos.com
-
-For a meos-controlled mirror (large assets, pinning outside npm):
-
-```bash
-meo cdn put save-in-meos/dist/widget.iife.js
-```
-
-This is **optional** — unpkg/jsDelivr are the primary integrator CDN path for the widget.
-
----
-
-## GitHub Actions
-
-| Workflow | Trigger | What it does |
-|----------|---------|--------------|
-| [`ci.yml`](../.github/workflows/ci.yml) | PR + push to `main` / `develop` | `npm ci`, typecheck, checks, test, build |
-| [`release.yml`](../.github/workflows/release.yml) | GitHub Release **published** or manual `workflow_dispatch` | Full verify + `npm publish` |
-
-Manual dry run (build + verify, no publish):
-
-1. Actions → Release → Run workflow
-2. Leave **dry_run** as `true` (default)
+jsDelivr often indexes new versions faster than unpkg.
 
 ---
 
 ## Release checklist
 
-- [ ] `npm test` GREEN
-- [ ] `npm run check:mdp` GREEN
-- [ ] `npm run check:public-scrub` GREEN
-- [ ] `npm run check:ci` GREEN
-- [ ] Version bumped in `package.json`
-- [ ] `VERSION` constant updated in `examples/demo.html` + `examples/cdn-demo.html`
-- [ ] `npm run demo` — chip visible at `/demo?local=1` and `/theme-demo.html`
-- [ ] GitHub Release notes mention breaking MDP / widget changes if any
-- [ ] After publish: unpkg URL loads `MeosSave.initSaveButton` (flat global, not `.default`)
+- [ ] `npm test` + `npm run check:mdp` + `npm run check:ci` GREEN
+- [ ] `npm version patch` (or bump `package.json`)
+- [ ] **`npm run version:sync`**
+- [ ] Commit + push `main`
+- [ ] GitHub Release `vX.Y.Z` (tag = `package.json` version)
+- [ ] CI publish GREEN (or manual publish if OIDC still blocked)
+- [ ] Verify: `npm view @meoslabs/save-in-meos version`
+- [ ] Verify CDN: `curl -sI https://cdn.jsdelivr.net/npm/@meoslabs/save-in-meos@VERSION/dist/widget.iife.js`
+- [ ] Verify demo: https://meoslabs.github.io/save-in-meos/
 
 ---
 
@@ -198,8 +180,9 @@ Manual dry run (build + verify, no publish):
 
 | Symptom | Fix |
 |---------|-----|
-| `403` on publish | Token lacks publish rights or wrong scope / org |
-| unpkg 404 | Not published yet, wrong package name, or registry propagation delay |
-| `MeosSave.default` in browser | Rebuild widget — `iife-entry.ts` must use named exports only |
-| `check-public-scrub` FAIL | Remove internal paths, branch names, or secrets from committed docs |
-| Local demo 404 | Run `npm run demo` (not bare `serve examples` without `build:widget`) |
+| OIDC `E404` on publish | Upgrade npm in CI (see above); verify Trusted Publisher on **package** |
+| `check-version-pins` FAIL | `npm run version:sync` |
+| `403` cannot republish version | npm version slots are immutable — bump patch |
+| unpkg 404, jsDelivr 200 | Wait for propagation or pin jsDelivr |
+| Pages 404 | Enable Pages → GitHub Actions source; wait for `pages.yml` |
+| `MeosSave.default` in browser | Rebuild widget — named exports only in `iife-entry.ts` |

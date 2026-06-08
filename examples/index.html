@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>save in meos — live demos</title>
+    <link rel="stylesheet" href="./vendor/fonts.css" />
+    <style>
+      :root {
+        color-scheme: light dark;
+        --page-bg: #fff;
+        --page-fg: #000;
+        --muted: rgba(127, 127, 127, 0.85);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --page-bg: #151515;
+          --page-fg: #fff;
+        }
+      }
+      body {
+        font-family: var(--meos-font, ui-monospace, monospace);
+        background: var(--page-bg);
+        color: var(--page-fg);
+        margin: 0;
+        padding: 2rem;
+        line-height: 1.6;
+      }
+      main {
+        max-width: 44rem;
+        margin: 0 auto;
+      }
+      h1 {
+        font-weight: 500;
+        font-size: 1.5rem;
+      }
+      .lede {
+        opacity: 0.85;
+      }
+      ul {
+        padding-left: 1.25rem;
+      }
+      a {
+        color: inherit;
+      }
+      .badge-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin: 1rem 0 1.5rem;
+      }
+      .badge-row img {
+        height: 20px;
+      }
+      code {
+        font-size: 0.9em;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>save in meos — embed widget demos</h1>
+      <p class="lede">
+        Interactive examples for <code>@meoslabs/save-in-meos</code>. Bundled
+        widget assets load from <code>./vendor/</code> (no npm account required on
+        this site).
+      </p>
+      <p class="badge-row">
+        <a href="https://www.npmjs.com/package/@meoslabs/save-in-meos"
+          ><img
+            src="https://img.shields.io/npm/v/@meoslabs/save-in-meos.svg?style=flat-square"
+            alt="npm version"
+        /></a>
+        <a href="https://github.com/meoslabs/save-in-meos"
+          ><img
+            src="https://img.shields.io/github/license/meoslabs/save-in-meos?style=flat-square"
+            alt="license"
+        /></a>
+      </p>
+      <ul>
+        <li>
+          <a href="./demo.html?local=1">Blog post embed</a> — share row with
+          <strong>save in meos</strong> chip
+        </li>
+        <li>
+          <a href="./theme-demo.html">Theme + chip presets</a> — light / dark /
+          auto and default / compact
+        </li>
+        <li>
+          <a href="./chip-preview.html">Chip preview grid</a> — all preset
+          combinations
+        </li>
+        <li>
+          <a href="./cdn-demo.html">CDN integrator snippet</a> — copy/paste
+          unpkg script tag
+        </li>
+      </ul>
+      <p class="lede">
+        Source:
+        <a href="https://github.com/meoslabs/save-in-meos">meoslabs/save-in-meos</a>
+        · Docs:
+        <a href="https://github.com/meoslabs/save-in-meos/blob/main/docs/INTEGRATOR.md"
+          >INTEGRATOR.md</a
+        >
+      </p>
+    </main>
+  </body>
+</html>

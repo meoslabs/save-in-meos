@@ -43,6 +43,7 @@ if (ci) {
   requireContains(ci, "check:mdp", "ci.yml")
   requireContains(ci, "check:public-scrub", "ci.yml")
   requireContains(ci, "npm test", "ci.yml")
+  requireContains(ci, "npm@11", "ci.yml")
 }
 
 const release = requireFile("release.yml")
@@ -53,8 +54,16 @@ if (release) {
   requireContains(release, "registry-url:", "release.yml")
   requireContains(release, "--provenance", "release.yml")
   requireContains(release, "--access public", "release.yml")
+  requireContains(release, "npm@11", "release.yml")
+  requireContains(release, "check-release-version", "release.yml")
   requireAbsent(release, "NODE_AUTH_TOKEN", "release.yml")
   requireAbsent(release, "NPM_TOKEN", "release.yml")
+}
+
+const pages = requireFile("pages.yml")
+if (pages) {
+  requireContains(pages, "build:widget", "pages.yml")
+  requireContains(pages, "deploy-pages", "pages.yml")
 }
 
 if (violations.length > 0) {

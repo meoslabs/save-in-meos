@@ -1,12 +1,12 @@
 {
   "name": "@meoslabs/save-in-meos",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "meos deeplink protocol (MDP) codec and save-in-meos embed widget for third-party sites",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/meoslabs/save-in-meos.git"
   },
-  "homepage": "https://github.com/meoslabs/save-in-meos#readme",
+  "homepage": "https://meoslabs.github.io/save-in-meos/",
   "bugs": {
     "url": "https://github.com/meoslabs/save-in-meos/issues"
   },
@@ -65,7 +65,9 @@
     "check:mdp": "npm run check:mdp-contract && npm run check:widget-branding",
     "check:public-scrub": "tsx scripts/check-public-scrub.ts",
     "check:ci": "tsx scripts/check-ci-workflows.ts",
-    "prepublishOnly": "npm run build && npm run build:widget && npm run check:mdp && npm run check:public-scrub",
+    "check:version-pins": "tsx scripts/check-version-pins.ts",
+    "version:sync": "tsx scripts/sync-version.ts --build",
+    "prepublishOnly": "npm run build && npm run build:widget && npm run check:mdp && npm run check:public-scrub && npm run check:version-pins",
     "prepare": "husky"
   },
   "keywords": [
