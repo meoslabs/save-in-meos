@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>save to meos — demo</title>
+    <link rel="stylesheet" href="../src/widget/fonts.css" />
+    <style>
+      :root {
+        color-scheme: light dark;
+        --meos-bg: #ffffff;
+        --meos-fg: #000000;
+        --meos-btn-bg: #000000;
+        --meos-btn-fg: #ffffff;
+        --meos-border: #000000;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --meos-bg: #151515;
+          --meos-fg: #ffffff;
+          --meos-btn-bg: #ffffff;
+          --meos-btn-fg: #000000;
+          --meos-border: #ffffff;
+        }
+      }
+
+      body {
+        font-family: var(--meos-font);
+        background: var(--meos-bg);
+        color: var(--meos-fg);
+        margin: 0;
+        padding: 2rem;
+        line-height: 1.6;
+      }
+
+      article {
+        max-width: 42rem;
+        margin: 0 auto;
+      }
+
+      h1 {
+        font-weight: 500;
+        font-size: 1.5rem;
+      }
+
+      .meos-save-btn {
+        font-family: var(--meos-font);
+        font-weight: 500;
+        font-size: 0.875rem;
+        border-radius: var(--meos-radius);
+        border: 1px solid var(--meos-border);
+        background: var(--meos-btn-bg);
+        color: var(--meos-btn-fg);
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        margin-top: 1.5rem;
+      }
+
+      .meos-save-btn:hover {
+        opacity: 0.9;
+      }
+
+      .hint {
+        margin-top: 1rem;
+        font-size: 0.75rem;
+        opacity: 0.7;
+      }
+    </style>
+  </head>
+  <body>
+    <article>
+      <h1>Example blog post</h1>
+      <p>
+        Select a passage or click the button below to try the
+        <strong>save to meos</strong> widget flow. On desktop this opens the
+        meos.do import preview; on phone with the app installed it opens share
+        review.
+      </p>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. This demo uses
+        bundled Inconsolata — no external font CDN.
+      </p>
+      <button
+        type="button"
+        class="meos-save-btn"
+        data-testid="mlp-demo-save-btn"
+        data-label="save to meos"
+        data-widget-id="demo"
+      >
+        save to meos
+      </button>
+      <p class="hint">
+        Wave -1 bootstrap: widget script loads from <code>../dist/widget.iife.js</code>
+        when built. Until Phase 1, button shows an alert placeholder.
+      </p>
+    </article>
+    <script>
+      document.querySelector(".meos-save-btn")?.addEventListener("click", () => {
+        alert(
+          "save to meos demo (Wave -1): buildMeosLink not implemented yet. Run npm run check:mdp to verify RED→GREEN.",
+        )
+      })
+    </script>
+  </body>
+</html>

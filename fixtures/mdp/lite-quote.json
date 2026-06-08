@@ -1,0 +1,14 @@
+{
+  "name": "lite-quote",
+  "description": "LITE tier — URL plus quoted text snippet",
+  "intent": {
+    "v": 1,
+    "tier": "LITE",
+    "u": "https://blog.example.org/posts/hello",
+    "t": "A short quoted passage from the article body."
+  },
+  "widgetId": "demo",
+  "expectedHost": "meos.do",
+  "expectedResource": "databox:import",
+  "maxUrlLength": 2048
+}

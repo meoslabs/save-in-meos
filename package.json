@@ -1,0 +1,54 @@
+{
+  "name": "@meos/save-in-meos",
+  "version": "0.0.1",
+  "description": "meos deeplink protocol (mdp) codec and save-to-meos embed widget",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./fonts.css": "./src/widget/fonts.css"
+  },
+  "files": [
+    "dist/",
+    "src/widget/fonts.css",
+    "assets/fonts/"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "check:mdp-contract": "tsx scripts/check-mdp-contract.ts",
+    "check:widget-branding": "tsx scripts/check-widget-branding.ts",
+    "check:mdp": "npm run check:mdp-contract && npm run check:widget-branding",
+    "prepare": "husky"
+  },
+  "keywords": [
+    "meos",
+    "mdp",
+    "deeplink",
+    "widget",
+    "import"
+  ],
+  "author": {
+    "name": "meoslabs",
+    "email": "founders@usemeos.com",
+    "url": "https://meos.do"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^22.15.0",
+    "husky": "^9.1.7",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3",
+    "vitest": "^3.1.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

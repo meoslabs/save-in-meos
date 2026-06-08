@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+# WHY: Wave -1 Drift Defender — branding + types before commit.
+# NOTE: check-mdp-contract stays RED until Phase 1 codec — run full DoD via npm run check:mdp
+
+set -e
+
+echo "🛡️ save-in-meos: widget branding..."
+npm run check:widget-branding
+
+echo "🔍 save-in-meos: typecheck..."
+npm run typecheck

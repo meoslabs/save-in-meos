@@ -1,0 +1,13 @@
+{
+  "name": "ref-minimal",
+  "description": "REF tier — URL only, no widget attribution",
+  "intent": {
+    "v": 1,
+    "tier": "REF",
+    "u": "https://example.com/article"
+  },
+  "widgetId": null,
+  "expectedHost": "meos.do",
+  "expectedResource": "databox:import",
+  "maxUrlLength": 2048
+}
