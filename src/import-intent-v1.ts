@@ -1,17 +1,15 @@
 /**
- * WHY: ImportIntentV1 is the codec SSOT for meos deeplink protocol (mdp).
- *      LIP-0028 references this package semver — do not duplicate encode/decode
- *      in meos-core-logic or meos-app.
+ * WHY: ImportIntentV1 is the codec SSOT for meos deeplink protocol (MDP).
+ *      Encode/decode for databox:import must live only in this package.
  * WHAT: Types + encode/decode/buildMeosLink for `databox:import` URLs.
  * HOW: Optimised wire schema (k: u|ut|i|f) → JSON → deflateRaw → base64url.
- * WHERE: @meos/save-in-meos — consumed by widget, desktop frame, app bridge.
- * WHEN: Phase 1 codec lane (check-mdp-contract GREEN).
+ * WHERE: @meos/save-in-meos — consumed by widget and meos clients.
  * GUARDED: check-mdp-contract.ts golden fixtures in fixtures/mdp/.
  */
 
 import pako from "pako"
 
-/** MDP contract version — pinned by LIP-0028 and cross-repo smoke tests. */
+/** MDP contract version — semver pinned by golden fixture checkers. */
 export const MDP_CONTRACT_VERSION = "0.0.1"
 
 export type ImportIntentTier = "REF" | "LITE" | "IMG" | "FULL"

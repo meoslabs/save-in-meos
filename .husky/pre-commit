@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-# WHY: Wave -1 Drift Defender — MDP contract + branding + types before commit.
+# WHY: MDP contract + branding + types before commit.
 # GUARDED: check-mdp-contract is BLOCKING (codec SSOT must not drift).
 
 set -e

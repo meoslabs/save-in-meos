@@ -1,11 +1,12 @@
 # Integrator guide — @meos/save-in-meos
 
-> **Status:** Wave -1 stub. Full spec mirrors LIP-0028 (meos-core-logic) when drafted.
+Embed a **save to meos** button on any site. The button opens a canonical import URL:
 
-## TL;DR
+```
+https://meos.do/databox:import:{encoded}?w={widgetId}
+```
 
-Embed a **save to meos** button on any site. The button builds a
-`https://meos.do/databox:import:{encoded}?w={widgetId}` deeplink.
+On desktop, users see the meos.do import preview (with QR). On mobile with the meos app installed, the link opens share review and saves into their databox.
 
 ---
 
@@ -13,42 +14,67 @@ Embed a **save to meos** button on any site. The button builds a
 
 1. Open [`examples/demo.html`](../examples/demo.html) in a browser
 2. Click **save to meos**
-3. Desktop → meos.do import preview + QR (after Phase 1)
-4. Phone with app → share review flow (after MIP-0043)
+3. Confirm the URL host is `meos.do` and includes your `widgetId` in `?w=`
 
 ---
 
-## npm (Phase 1+)
+## npm install
 
 ```bash
 npm install @meos/save-in-meos
 ```
+
+### Widget embed
 
 ```ts
 import "@meos/save-in-meos/fonts.css"
 import "@meos/save-in-meos/widget.css"
 import { initSaveButton } from "@meos/save-in-meos"
 
-// Empty mount → closed shadow DOM chip (integrators cannot restyle)
+// Empty mount → closed shadow DOM chip (integrators cannot restyle internals)
 initSaveButton("#meos-save-mount", {
   u: "https://example.com/article",
   widgetId: "my-widget",
 })
 ```
 
-The chip label is fixed at **save to meos** — there is no `label` option.
-Branding is enforced by the widget implementation and `check-widget-branding`.
+The chip label is fixed at **save to meos** — there is no `label` option. Branding is enforced by the widget and `npm run check:widget-branding`.
+
+### Build links without the widget
+
+```ts
+import {
+  buildMeosLink,
+  decodeMeosLink,
+  encodeImportIntentV1,
+  type ImportIntentV1,
+} from "@meos/save-in-meos"
+
+const intent: ImportIntentV1 = {
+  v: 1,
+  tier: "LITE",
+  u: "https://example.com/post",
+  t: "A passage the reader selected",
+}
+
+const url = buildMeosLink(intent, "my-widget")
+const restored = decodeMeosLink(url)
+```
 
 ---
 
-## Script tag (Phase 2)
+## Script tag (planned)
+
+A hosted IIFE bundle will be available at `https://getmeos.com/widget/v1.js`. Until then, bundle with `npm run build:widget` and self-host `dist/widget.iife.js`:
 
 ```html
-<script
-  async
-  src="https://getmeos.com/widget/v1.js"
-  data-widget-id="auto"
-></script>
+<script src="/path/to/widget.iife.js"></script>
+<script>
+  MeosSave.initSaveButton("#meos-save-mount", {
+    u: location.href,
+    widgetId: "my-widget",
+  })
+</script>
 ```
 
 ---
@@ -69,14 +95,20 @@ Branding is enforced by the widget implementation and `check-widget-branding`.
 
 ## Protocol reference
 
-- Canonical host: `meos.do`
-- Resource: `databox:import`
-- Tiers: REF / LITE / IMG / FULL (v1)
-- Attribution: `?w={widgetId}`
+| Constant | Value |
+|----------|-------|
+| Host | `meos.do` |
+| Resource | `databox:import` |
+| Tiers (v1) | REF / LITE / IMG / FULL |
+| Attribution | `?w={widgetId}` |
 
-See LIP-0028 in meos-core-logic for the authoritative contract.
+**REF** — URL only. **LITE** — URL + quoted text (`t`). **IMG** — URL + `images[]`. **FULL** — URL + optional `blocks[]`.
 
-### App Links / Universal Links
+Widget attribution (`w`) is carried in the query string only; it is never embedded in the compressed payload.
+
+---
+
+## App Links / Universal Links
 
 Widget URLs open the **meos** app when installed:
 
@@ -85,7 +117,13 @@ Widget URLs open the **meos** app when installed:
 | Android | App Links (`autoVerify`) | `https://meos.do/.well-known/assetlinks.json` |
 | iOS | Associated Domains | `https://meos.do/.well-known/apple-app-site-association` |
 
-Paths covered: `/link*`, `/databox:import*` (MDP). Desktop browsers without the app
-see the import preview frame on `meos.do`; mobile browsers see an install interstitial.
+Paths covered include `/databox:import*` (MDP). Desktop browsers without the app see the import preview on meos.do; mobile browsers may see an install interstitial.
 
-Release checklist: `docs/RELEASE-MDP-DEEPLINKS.md`.
+See [`RELEASE-MDP-DEEPLINKS.md`](RELEASE-MDP-DEEPLINKS.md) for the integrator-facing matrix.
+
+---
+
+## Support
+
+- Issues: [github.com/meoslabs/save-in-meos/issues](https://github.com/meoslabs/save-in-meos/issues)
+- Product: [meos.do](https://meos.do)

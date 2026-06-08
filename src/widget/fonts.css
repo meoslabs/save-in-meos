@@ -1,6 +1,6 @@
 /**
  * WHY: Integrators must not load Inconsolata from Google Fonts CDN.
- *      This file ships bundled woff2 (OFL-1.1) matching meos-app typography.
+ *      This file ships bundled woff2 (OFL-1.1) matching meos product typography.
  * WHAT: @font-face declarations for widget + demo surfaces.
  * WHERE: import '@meos/save-in-meos/fonts.css'
  */

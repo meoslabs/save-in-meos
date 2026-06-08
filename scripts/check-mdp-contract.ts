@@ -4,7 +4,7 @@
  * WHAT: Golden fixture roundtrips, URL grammar, QR size guard, stable buildMeosLink.
  * HOW: Loads fixtures/mdp/*.json; exercises encode/decode/buildMeosLink/decodeMeosLink.
  * WHERE: save-in-meos/scripts/check-mdp-contract.ts
- * WHEN: Pre-commit (BLOCKING); expect RED until codec Phase 1 lands.
+ * WHEN: Pre-commit (BLOCKING).
  * GUARDED: Fixture filenames pinned; renames require explicit checker update.
  */
 import fs from "node:fs"
@@ -119,7 +119,7 @@ function runFixture(fixture: MdpFixture): void {
     encoded = encodeImportIntentV1(fixture.intent)
   } catch (err) {
     fail(
-      `${fixture.name}: encodeImportIntentV1 threw — ${err instanceof Error ? err.message : String(err)} (expected RED until codec ships)`,
+      `${fixture.name}: encodeImportIntentV1 threw — ${err instanceof Error ? err.message : String(err)}`,
     )
     return
   }
@@ -128,7 +128,7 @@ function runFixture(fixture: MdpFixture): void {
     url = buildMeosLink(fixture.intent, widgetId)
   } catch (err) {
     fail(
-      `${fixture.name}: buildMeosLink threw — ${err instanceof Error ? err.message : String(err)} (expected RED until codec ships)`,
+      `${fixture.name}: buildMeosLink threw — ${err instanceof Error ? err.message : String(err)}`,
     )
     return
   }
@@ -193,7 +193,7 @@ for (const fixture of fixtures) {
 
 // ── Report ──────────────────────────────────────────────────────────────────
 if (violations.length > 0) {
-  console.error("check-mdp-contract: FAIL (expected RED until codec implementation)")
+  console.error("check-mdp-contract: FAIL")
   console.error(`MDP_CONTRACT_VERSION=${MDP_CONTRACT_VERSION}`)
   for (const v of violations) {
     console.error(`  ✗ ${v}`)

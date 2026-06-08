@@ -1,45 +1,56 @@
-# MDP smoke test matrix
+# MDP smoke tests — @meos/save-in-meos
 
-Manual and automated gates for **meos deeplink protocol (MDP)** on branch `feat/save-in-meos`.
-Canonical URL: `https://meos.do/databox:import:{encoded}?w={widgetId}`.
+Package-level gates before publishing a new version. Canonical URL shape:
 
-## Lane commands
-
-| Lane | Repo | Command | Proves |
-|------|------|---------|--------|
-| A — Codec | save-in-meos | `npm test && npm run check:mdp` | Encode/decode roundtrips, tier pick |
-| B — Desktop browser | meos-desktop | `yarn e2e e2e/components/system/MdpImport.spec.ts` | Import frame + QR |
-| C — Desktop unit | meos-desktop | `yarn test __tests__/utils/mdp-import.spec.ts` | Decode fixtures, sanitizer |
-| D — Core privacy | meos-core-logic | `npx ts-node scripts/lip/check-mdp-privacy.ts` | No raw URL on `deeplink_resolved` |
-| E — Edge privacy | website-getmeos.com | `npm test` (vitest `check-mdp-edge-privacy`) | No import blob in `campaign_path` |
-| F — App handlers | meos-app | `yarn mip:check:fast` | Bridge, registry, sanitizer wiring |
-| G — Real phone | meos-app (ADB) | See below | Universal link → share review → pad |
-
-## ADB matrix (primary device gate)
-
-Assume a release/dev APK is sideloaded ([meos-android-sideload skill](https://github.com/meoslabs/meos-app)).
-
-```bash
-adb shell am start -a android.intent.action.VIEW \
-  -d 'https://meos.do/databox:import:{fixture}?w=adb-test'
-
-adb logcat -s ReactNativeJS | rg -i 'mdpImport|share-receive|usePadSeed'
+```
+https://meos.do/databox:import:{encoded}?w={widgetId}
 ```
 
-| Case | Input | Expected |
-|------|-------|----------|
-| REF cold start | intent URL, app killed | Overlay → review → pad, `source.kind=import` |
-| LITE quote | url+text in blob | `origin: "quoted"` on primary block |
-| REF warm | app backgrounded | share-receive route or overlay |
-| Misroute regression | same host `/link/foo` | Still NexusLink — not import |
-| Desktop QR | scan from DataboxImportFrame | Same as REF cold start |
+## Automated (required)
 
-## Privacy spot-checks
+```bash
+npm install
+npm run build
+npm test
+npm run check:mdp
+npm run check:public-scrub
+```
 
-- PostHog `deeplink_resolved`: must include `mdp_verb` / `url_host`, never raw `url` or encoded blob.
-- getmeos.com edge `getmeos_redirect`: `campaign_path` must be `/databox:import:[redacted]` for import-shaped paths.
-- Desktop OG / middleware: no full import URL in description (DIP-0035).
+| Check | Proves |
+|-------|--------|
+| `npm test` | Unit roundtrips, tier selection, error cases |
+| `check:mdp-contract` | Golden fixtures encode/decode, URL grammar, QR length guard |
+| `check:widget-branding` | Bundled Inconsolata, lowercase label, no Google Fonts CDN |
+| `check:public-scrub` | No internal agent paths or secrets in committed docs |
 
-## Fixtures
+## Manual widget smoke
 
-Golden URLs live in `save-in-meos/fixtures/mdp/` (codec lane). Use the same fixtures for Playwright and ADB.
+1. `npm run build && npm run build:widget`
+2. Open `examples/demo.html` in Chrome and Safari (or `npx serve examples`)
+3. Click **save to meos** — URL must be `https://meos.do/databox:import:…`
+4. Confirm chip uses bundled font (no network request to `fonts.googleapis.com`)
+5. Toggle light/dark mode — chip stays monochrome B/W
+
+## Fixture spot-check
+
+Golden intents live in `fixtures/mdp/`:
+
+| Fixture | Tier | Notes |
+|---------|------|-------|
+| `ref-minimal.json` | REF | URL only |
+| `lite-quote.json` | LITE | URL + quote |
+| `ref-with-widget.json` | REF | `?w=` attribution |
+
+Decode any `buildMeosLink` output and confirm it matches the fixture intent.
+
+## Cross-platform (integrator)
+
+After deploying your embed:
+
+| Surface | Expected |
+|---------|----------|
+| Desktop browser | meos.do import preview + QR |
+| Mobile + meos app | Share review → pad |
+| Mobile, no app | Install / open funnel on meos.do |
+
+Use the same fixture URLs your CI generates — do not hand-craft encoded blobs.

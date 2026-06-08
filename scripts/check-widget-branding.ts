@@ -1,10 +1,10 @@
 #!/usr/bin/env tsx
 /**
- * WHY: Widget must match meos-app monochrome B/W + bundled Inconsolata (no CDN).
+ * WHY: Widget must match meos monochrome B/W + bundled Inconsolata (no CDN).
  * WHAT: Verifies font assets, chip CSS, fixed label, no integrator style hooks.
  * HOW: File presence + content scan of src/, examples/, package exports.
  * WHERE: save-in-meos/scripts/check-widget-branding.ts
- * WHEN: Pre-commit (BLOCKING); should PASS on Wave -1 bootstrap (fonts ship in repo).
+ * WHEN: Pre-commit (BLOCKING).
  * GUARDED: OFL.txt + woff2 paths pinned; CDN strings are hard failures.
  */
 import fs from "node:fs"

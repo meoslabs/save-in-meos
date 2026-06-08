@@ -16,7 +16,7 @@ declare global {
 
 const MeosSave: MeosSaveGlobal = {
   initSaveButton,
-  version: "0.0.1-stub",
+  version: "0.0.1",
 }
 
 if (typeof window !== "undefined") {

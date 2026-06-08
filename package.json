@@ -1,7 +1,15 @@
 {
   "name": "@meos/save-in-meos",
   "version": "0.0.1",
-  "description": "meos deeplink protocol (mdp) codec and save-to-meos embed widget",
+  "description": "meos deeplink protocol (MDP) codec and save-to-meos embed widget for third-party sites",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/meoslabs/save-in-meos.git"
+  },
+  "homepage": "https://github.com/meoslabs/save-in-meos#readme",
+  "bugs": {
+    "url": "https://github.com/meoslabs/save-in-meos/issues"
+  },
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -23,7 +31,9 @@
     "dist/",
     "src/widget/fonts.css",
     "src/widget/widget.css",
-    "assets/fonts/"
+    "assets/fonts/",
+    "LICENSE",
+    "README.md"
   ],
   "scripts": {
     "build": "tsc",
@@ -33,6 +43,8 @@
     "check:mdp-contract": "tsx scripts/check-mdp-contract.ts",
     "check:widget-branding": "tsx scripts/check-widget-branding.ts",
     "check:mdp": "npm run check:mdp-contract && npm run check:widget-branding",
+    "check:public-scrub": "tsx scripts/check-public-scrub.ts",
+    "prepublishOnly": "npm run build && npm run build:widget",
     "prepare": "husky",
     "build:widget": "esbuild src/widget/iife-entry.ts --bundle --format=iife --global-name=MeosSave --outfile=dist/widget.iife.js --platform=browser"
   },
