@@ -120,9 +120,12 @@ describe("buildMeosLink", () => {
     const intent = buildImportIntentV1({
       u: "https://example.com/article",
       t: "A short quoted passage.",
-      images: ["https://example.com/a.jpg", "https://example.com/b.jpg"],
+      images: [
+        "https://cdn.example.com/gallery/" + "a".repeat(80) + "/1.jpg",
+        "https://cdn.example.com/gallery/" + "b".repeat(80) + "/2.jpg",
+      ],
     })
-    const url = buildMeosLink(intent, "demo", { maxUrlLength: 200 })
+    const url = buildMeosLink(intent, "demo", { maxUrlLength: 140 })
     expect(url.length).toBeLessThanOrEqual(200)
     const decoded = decodeMeosLink(url)
     expect(decoded.tier).toBe("LITE")
