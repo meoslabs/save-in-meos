@@ -22,14 +22,14 @@ Static SVG previews of the branded chip (regenerated from widget SSOT on `npm ru
       <td><strong>light</strong></td>
       <td align="center">
         <img
-          src="https://unpkg.com/@meoslabs/save-in-meos@0.0.2/assets/preview/chip-default-light.svg"
+          src="https://unpkg.com/@meoslabs/save-in-meos@0.0.3/assets/preview/chip-default-light.svg"
           alt="save in meos chip — default preset, light theme"
           height="55"
         />
       </td>
       <td align="center">
         <img
-          src="https://unpkg.com/@meoslabs/save-in-meos@0.0.2/assets/preview/chip-compact-light.svg"
+          src="https://unpkg.com/@meoslabs/save-in-meos@0.0.3/assets/preview/chip-compact-light.svg"
           alt="save chip — compact preset, light theme"
           height="52"
         />
@@ -39,14 +39,14 @@ Static SVG previews of the branded chip (regenerated from widget SSOT on `npm ru
       <td><strong>dark</strong></td>
       <td align="center">
         <img
-          src="https://unpkg.com/@meoslabs/save-in-meos@0.0.2/assets/preview/chip-default-dark.svg"
+          src="https://unpkg.com/@meoslabs/save-in-meos@0.0.3/assets/preview/chip-default-dark.svg"
           alt="save in meos chip — default preset, dark theme"
           height="55"
         />
       </td>
       <td align="center">
         <img
-          src="https://unpkg.com/@meoslabs/save-in-meos@0.0.2/assets/preview/chip-compact-dark.svg"
+          src="https://unpkg.com/@meoslabs/save-in-meos@0.0.3/assets/preview/chip-compact-dark.svg"
           alt="save chip — compact preset, dark theme"
           height="52"
         />
@@ -55,7 +55,7 @@ Static SVG previews of the branded chip (regenerated from widget SSOT on `npm ru
   </tbody>
 </table>
 
-Preview assets also ship in-repo at [`assets/preview/`](assets/preview/) and on [jsDelivr](https://cdn.jsdelivr.net/npm/@meoslabs/save-in-meos@0.0.2/assets/preview/chip-default-light.svg).
+Preview assets also ship in-repo at [`assets/preview/`](assets/preview/) and on [jsDelivr](https://cdn.jsdelivr.net/npm/@meoslabs/save-in-meos@0.0.3/assets/preview/chip-default-light.svg).
 
 ## How to integrate
 
@@ -143,9 +143,9 @@ initSaveButton("#meos-save-mount", {
 ## Quick start — script tag
 
 ```html
-<link rel="stylesheet" href="https://unpkg.com/@meoslabs/save-in-meos@0.0.2/src/widget/fonts.css" />
+<link rel="stylesheet" href="https://unpkg.com/@meoslabs/save-in-meos@0.0.3/src/widget/fonts.css" />
 <div id="meos-save-mount"></div>
-<script src="https://unpkg.com/@meoslabs/save-in-meos@0.0.2/dist/widget.iife.js"></script>
+<script src="https://unpkg.com/@meoslabs/save-in-meos@0.0.3/dist/widget.iife.js"></script>
 <script>
   MeosSave.initSaveButton("#meos-save-mount", {
     u: location.href,
