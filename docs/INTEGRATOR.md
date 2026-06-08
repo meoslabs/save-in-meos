@@ -75,3 +75,17 @@ Branding is enforced by the widget implementation and `check-widget-branding`.
 - Attribution: `?w={widgetId}`
 
 See LIP-0028 in meos-core-logic for the authoritative contract.
+
+### App Links / Universal Links
+
+Widget URLs open the **meos** app when installed:
+
+| Platform | Mechanism | Hosted file |
+|----------|-----------|-------------|
+| Android | App Links (`autoVerify`) | `https://meos.do/.well-known/assetlinks.json` |
+| iOS | Associated Domains | `https://meos.do/.well-known/apple-app-site-association` |
+
+Paths covered: `/link*`, `/databox:import*` (MDP). Desktop browsers without the app
+see the import preview frame on `meos.do`; mobile browsers see an install interstitial.
+
+Release checklist: `docs/RELEASE-MDP-DEEPLINKS.md`.
