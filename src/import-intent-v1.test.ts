@@ -115,6 +115,21 @@ describe("buildMeosLink", () => {
     expect(buildMeosLink(intent, "demo")).toBe(buildMeosLink(intent, "demo"))
   })
 
+
+  it("degrades IMG to LITE before REF when quoted text fits QR guard", () => {
+    const intent = buildImportIntentV1({
+      u: "https://example.com/article",
+      t: "A short quoted passage.",
+      images: ["https://example.com/a.jpg", "https://example.com/b.jpg"],
+    })
+    const url = buildMeosLink(intent, "demo", { maxUrlLength: 200 })
+    expect(url.length).toBeLessThanOrEqual(200)
+    const decoded = decodeMeosLink(url)
+    expect(decoded.tier).toBe("LITE")
+    expect(decoded.t).toBe(intent.t)
+    expect(decoded.images).toBeUndefined()
+  })
+
   it("degrades to REF when URL exceeds QR guard", () => {
     const intent = buildImportIntentV1({
       u: "https://example.com/long",

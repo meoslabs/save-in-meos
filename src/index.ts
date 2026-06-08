@@ -1,7 +1,7 @@
 /**
- * WHY: Public entry for @meoslabs/save-in-meos — mdp codec + widget initialisers.
+ * WHY: Public entry for @meos/save-in-meos — mdp codec + widget initialisers.
  * WHAT: Re-exports ImportIntentV1 types, codec functions, and widget API.
- * WHERE: npm package root (`import from '@meoslabs/save-in-meos'`).
+ * WHERE: npm package root (`import from '@meos/save-in-meos'`).
  */
 
 export {
@@ -33,5 +33,10 @@ export {
   MEOS_SAVE_CHIP_CLASS,
   MEOS_SAVE_ICON_CLASS,
   MEOS_SAVE_LABEL_CLASS,
+  SAVE_CHIP_HOST_VARS,
+  SAVE_CHIP_PRESETS,
   type SaveButtonOptions,
+  type SaveChipCustomisation,
+  type SaveChipPreset,
+  type SaveChipTheme,
 } from "./widget/index.js"

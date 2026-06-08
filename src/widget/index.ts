@@ -1,5 +1,5 @@
 /**
- * WHY: Embeddable save-to-meos widget — builds MDP import URLs on user gesture.
+ * WHY: Embeddable save-in-meos widget — builds MDP import URLs on user gesture.
  * WHAT: initSaveButton mounts a branded chip (shadow DOM or fixed classes) + navigates.
  * WHERE: Bundled as dist/widget.iife.js for script-tag consumers.
  * GUARDED: No label/style overrides — branding enforced by implementation + checker.
@@ -10,17 +10,44 @@ import {
   buildMeosLink,
   type ImportIntentInput,
 } from "../import-intent-v1.js"
+import {
+  applyChipPresentation,
+  type SaveChipCustomisation,
+  type SaveChipPreset,
+  type SaveChipTheme,
+} from "./chip-theme.js"
 import { buildSaveIconSvg } from "./icon.js"
-import { MEOS_SAVE_WIDGET_CSS } from "./styles.js"
+import { MEOS_SAVE_DOCUMENT_CSS, MEOS_SAVE_SHADOW_CSS } from "./styles.js"
 
 export interface SaveButtonOptions extends ImportIntentInput {
   widgetId?: string
-  /** Slow logo spin on the chip — default true; respects prefers-reduced-motion. */
-  spin?: boolean
+  /**
+   * `auto` follows OS dark mode; `light` / `dark` pin the chip palette.
+   * Does not change font or logo — only foreground, border, and hover colours.
+   */
+  theme?: SaveChipTheme
+  /**
+   * Named chip preset — `default`, `comfortable`, or `compact` (logo + save in meos).
+   * Explicit `chip` fields override preset values.
+   */
+  chipPreset?: SaveChipPreset
+  /**
+   * Bounded shape/size tweaks (height, padding, radius, icon box).
+   * Font and logo artwork are not customisable — use CSS host vars instead:
+   * `--meos-save-chip-height`, `--meos-save-chip-padding-x`, `--meos-save-chip-radius`,
+   * `--meos-save-icon-size`.
+   */
+  chip?: SaveChipCustomisation
 }
 
 /** Fixed user-facing copy — not customisable (meos brand). */
-export const MEOS_SAVE_LABEL = "save to meos" as const
+export type {
+  SaveChipCustomisation,
+  SaveChipPreset,
+  SaveChipTheme,
+} from "./chip-theme.js"
+export { SAVE_CHIP_HOST_VARS, SAVE_CHIP_PRESETS } from "./chip-theme.js"
+export const MEOS_SAVE_LABEL = "save in meos" as const
 
 export const MEOS_SAVE_CHIP_CLASS = "meos-save-chip" as const
 export const MEOS_SAVE_ICON_CLASS = "meos-save-chip__icon" as const
@@ -50,7 +77,7 @@ export function ensureWidgetStyles(): void {
   const style = document.createElement("style")
   style.id = STYLE_TAG_ID
   style.setAttribute("data-meos-save", "")
-  style.textContent = MEOS_SAVE_WIDGET_CSS
+  style.textContent = MEOS_SAVE_DOCUMENT_CSS
   document.head.appendChild(style)
   stylesInjected = true
 }
@@ -59,9 +86,9 @@ function isEmptyMount(el: HTMLElement): boolean {
   return el.childNodes.length === 0 && !el.textContent?.trim()
 }
 
-function applyBrandedChip(button: HTMLButtonElement, spin = true): void {
+function applyBrandedChip(button: HTMLButtonElement): void {
   button.type = "button"
-  button.className = spin ? `${MEOS_SAVE_CHIP_CLASS} meos-save-chip--spin` : MEOS_SAVE_CHIP_CLASS
+  button.className = MEOS_SAVE_CHIP_CLASS
   button.setAttribute("data-meos-save", "")
   button.setAttribute("aria-label", MEOS_SAVE_LABEL)
   button.innerHTML = buildSaveChipMarkup()
@@ -73,20 +100,26 @@ function shadowHostButton(host: HTMLElement): HTMLButtonElement | null {
 }
 
 function mountInShadowHost(host: HTMLElement, options: SaveButtonOptions): HTMLButtonElement {
+  applyChipPresentation(
+    host,
+    options.theme ?? "auto",
+    options.chip,
+    options.chipPreset,
+  )
   host.setAttribute(SHADOW_HOST_ATTR, "")
   const existing = shadowHostButton(host)
   if (existing) {
-    applyBrandedChip(existing, options.spin !== false)
+    applyBrandedChip(existing)
     wireClick(existing, options, true)
     return existing
   }
 
   const shadow = host.attachShadow({ mode: "closed" })
   const style = document.createElement("style")
-  style.textContent = MEOS_SAVE_WIDGET_CSS
+  style.textContent = MEOS_SAVE_SHADOW_CSS
   shadow.appendChild(style)
   const button = document.createElement("button")
-  applyBrandedChip(button, options.spin !== false)
+  applyBrandedChip(button)
   shadow.appendChild(button)
   wireClick(button, options)
   return button
@@ -118,17 +151,23 @@ function wireClick(
     "click",
     (event) => {
       event.preventDefault()
-      const pageUrl =
-        options.u || (typeof location !== "undefined" ? location.href : "")
-      const intent = buildImportIntentV1({
-        u: pageUrl,
-        t: options.t ?? capturedSelection ?? getSelectionText(),
-        images: options.images,
-        blocks: options.blocks,
-      })
-      const href = buildMeosLink(intent, options.widgetId)
-      if (typeof location !== "undefined") {
-        location.href = href
+      try {
+        const pageUrl =
+          typeof location !== "undefined"
+            ? location.href
+            : (options.u ?? "")
+        const intent = buildImportIntentV1({
+          u: pageUrl,
+          t: options.t ?? capturedSelection ?? getSelectionText(),
+          images: options.images,
+          blocks: options.blocks,
+        })
+        const href = buildMeosLink(intent, options.widgetId)
+        if (typeof location !== "undefined") {
+          location.href = href
+        }
+      } catch (err) {
+        console.error("[save-in-meos] failed to build import link", err)
       }
     },
     { signal: ac.signal },
@@ -172,7 +211,8 @@ export function initSaveButton(
     el.appendChild(button)
   }
 
-  applyBrandedChip(button, options.spin !== false)
+  applyBrandedChip(button)
+  applyChipPresentation(button, options.theme ?? "auto", options.chip, options.chipPreset)
   wireClick(button, options, true)
   return button
 }

@@ -1,6 +1,6 @@
 # @meoslabs/save-in-meos
 
-**meos deeplink protocol (MDP)** codec and **save to meos** embed widget for third-party sites.
+**meos deeplink protocol (MDP)** codec and **save in meos** embed widget for third-party sites.
 
 Let visitors save a page (or a quote from it) into [meos](https://meos.do) with one tap. This package builds canonical import URLs and ships a branded, self-contained button you can drop into any site — via npm, a script tag, or programmatic imports only.
 
@@ -22,28 +22,56 @@ Alias: `dist/save-in-meos.min.js` (identical minified IIFE).
 
 ## Widget appearance
 
-The **save to meos** chip is **not styleable** — by design. Empty mount points render inside a **closed shadow root** with fixed label, icon, and colours. Integrators cannot restyle internals (enforced by `check:widget-branding`).
+The **save in meos** chip uses a **closed shadow root**. Integrators cannot change the label, font (Inconsolata), or logo SVG path. The logo is **vector** (from `assets/branding/meos-logo-charcoal-nostroke.svg`), rendered at **16px mark height** by default with the correct brand aspect ratio.
 
-What you *can* control:
+| Customisable | Fixed (brand) |
+|--------------|---------------|
+| `theme: "auto" \| "light" \| "dark"` | Label: **save in meos** |
+| `chipPreset: "default" \| "comfortable" \| "compact"` | Font family + weight |
+| Chip height (28–40px), padding, radius | Logo SVG path |
+| Logo mark height (11–16px) | Logo animation (static mark only) |
 
-| Aspect | Behaviour |
-|--------|-----------|
-| **Dark / light chip** | Automatic via `prefers-color-scheme` (no option to pass) |
-| **Page typography** | Load `fonts.css` on your page — chip uses `--meos-font` when present |
-| **Placement** | Any empty `#mount` div in your layout |
-| **Spin animation** | `spin: false` in `initSaveButton` options |
+### Chip presets
+
+Use `chipPreset` for documented sizes. All presets show **meos logo + save in meos** — only spacing and tap target change.
+
+| Preset | Use when | Height | Padding X | Radius | Logo height |
+|--------|----------|--------|-----------|--------|-------------|
+| `default` | Share rows (default) | 31px | 10px | 2px | 16px |
+| `comfortable` | Hero / footer / larger tap | 38px | 14px | 8px | 16px |
+| `compact` | Dense toolbars | 28px | 8px | 2px | 16px |
+
+```ts
+initSaveButton("#meos-save-mount", {
+  u: location.href,
+  widgetId: "my-site",
+  theme: "dark",
+  chipPreset: "compact",
+})
+```
+
+Explicit `chip` fields override preset values. Prefer `chipPreset` over hand-rolled pixel values.
+
+**Theme:** `auto` follows OS `prefers-color-scheme`. Pin `light` or `dark` when your page theme differs from the OS.
+
+**Advanced shape via CSS on the mount host:**
+
+```css
+#meos-save-mount {
+  --meos-save-chip-height: 36px;
+  --meos-save-icon-size: 16px;
+}
+```
 
 **Live examples** (after `npm run demo`):
 
 | Demo | URL |
 |------|-----|
-| Blog post embed | `http://localhost:4173/demo?local=1` |
-| Light + dark side-by-side | `http://localhost:4173/theme-demo.html` |
+| Blog post embed | `http://localhost:4173/demo.html?local=1` |
+| Theme + chip presets | `http://localhost:4173/theme-demo.html` |
 | CDN copy/paste snippet | `http://localhost:4173/cdn-demo.html` |
 
-GitHub README cannot run script tags — use the demos above locally, or the unpkg URLs after publish (see [Publishing](#publishing)).
-
-Toggle your OS dark mode on `demo?local=1` to see the chip invert with the page background.
+See [`docs/INTEGRATOR.md`](docs/INTEGRATOR.md) for the full widget API.
 
 ## Quick start — npm widget
 

@@ -370,6 +370,21 @@ function toRefIntent(intent: ImportIntentV1): ImportIntentV1 {
   return { v: 1, tier: "REF", u: intent.u }
 }
 
+function toLiteIntent(intent: ImportIntentV1): ImportIntentV1 {
+  const quoted = intent.t?.trim()
+  if (!quoted) {
+    throw new MdpEncodeError("LITE tier requires quoted text (t)")
+  }
+  return { v: 1, tier: "LITE", u: intent.u, t: quoted }
+}
+
+/** Step down one tier for QR guard — IMG/FULL try LITE (keep quote) before REF. */
+function degradeIntentForQrGuard(intent: ImportIntentV1): ImportIntentV1 {
+  if (intent.tier === "LITE") return toRefIntent(intent)
+  if (intent.t?.trim()) return toLiteIntent(intent)
+  return toRefIntent(intent)
+}
+
 export interface BuildMeosLinkOptions {
   /** Override QR guard threshold (default MDP_MAX_QR_URL_LENGTH). */
   maxUrlLength?: number
@@ -377,7 +392,7 @@ export interface BuildMeosLinkOptions {
 
 /**
  * Build full https://meos.do/databox:import:{encoded}?w={widgetId} URL.
- * Degrades to REF tier when the URL exceeds MDP_MAX_QR_URL_LENGTH (QR guard).
+ * Degrades tier (IMG/FULL → LITE → REF) when the URL exceeds MDP_MAX_QR_URL_LENGTH.
  * Widget id is query-only — never embedded in the compressed blob.
  */
 export function buildMeosLink(
@@ -402,7 +417,7 @@ export function buildMeosLink(
   let url = assembleMeosUrl(encodeImportIntentV1(workingIntent), attribution)
 
   while (url.length > maxUrlLength && workingIntent.tier !== "REF") {
-    workingIntent = toRefIntent(workingIntent)
+    workingIntent = degradeIntentForQrGuard(workingIntent)
     url = assembleMeosUrl(encodeImportIntentV1(workingIntent), attribution)
   }
 

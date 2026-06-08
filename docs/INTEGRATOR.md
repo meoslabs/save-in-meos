@@ -1,6 +1,6 @@
 # Integrator guide — @meoslabs/save-in-meos
 
-Embed a **save to meos** button on any site. The button opens a canonical import URL:
+Embed a **save in meos** button on any site. The button opens a canonical import URL:
 
 ```
 https://meos.do/databox:import:{encoded}?w={widgetId}
@@ -24,7 +24,7 @@ On desktop, users see the meos.do import preview (with QR). On mobile with the m
 ## Quick start (30 seconds)
 
 1. Open [`examples/demo.html`](../examples/demo.html) in a browser
-2. Click **save to meos**
+2. Click **save in meos**
 3. Confirm the URL host is `meos.do` and includes your `widgetId` in `?w=`
 
 ---
@@ -49,7 +49,65 @@ initSaveButton("#meos-save-mount", {
 })
 ```
 
-The chip label is fixed at **save to meos** — there is no `label` option. Branding is enforced by the widget and `npm run check:widget-branding`.
+The chip label is fixed at **save in meos** — there is no `label` option. Font and logo path are not customisable. The logo is **vector SVG** (`meos-logo-charcoal-nostroke`) at **16px mark height** by default.
+
+### Theme (light / dark / auto)
+
+```ts
+initSaveButton("#meos-save-mount", {
+  u: "https://example.com/article",
+  widgetId: "my-widget",
+  theme: "dark", // "light" | "dark" | "auto" (follows OS)
+})
+```
+
+`theme: "auto"` (default) follows `prefers-color-scheme`. Pin `light` or `dark` when your page has its own theme toggle.
+
+### Chip presets (recommended)
+
+Prefer `chipPreset` over hand-rolled pixels. All presets render **meos logo + save in meos**.
+
+| Preset | Use when | Height | Padding X | Radius | Logo height |
+|--------|----------|--------|-----------|--------|-------------|
+| `default` | Share rows | 31px | 10px | 2px | 16px |
+| `comfortable` | Hero / footer | 38px | 14px | 8px | 16px |
+| `compact` | Dense toolbars | 28px | 8px | 2px | 16px |
+
+```ts
+initSaveButton("#meos-save-mount", {
+  u: location.href,
+  widgetId: "my-widget",
+  chipPreset: "compact",
+  theme: "dark",
+})
+```
+
+### Bounded shape / size (advanced)
+
+Override preset fields or set raw `chip` values:
+
+```ts
+initSaveButton("#meos-save-mount", {
+  u: location.href,
+  widgetId: "my-widget",
+  chipPreset: "default",
+  chip: { paddingX: 12 }, // overrides preset padding only
+})
+```
+
+Or set CSS custom properties on the mount host before `initSaveButton`:
+
+| Variable | Range | Default |
+|----------|-------|---------|
+| `--meos-save-chip-height` | 28–40px | 31px |
+| `--meos-save-chip-padding-x` | 8–16px | 10px |
+| `--meos-save-chip-radius` | 0–12px | 2px |
+| `--meos-save-icon-size` | 11–16px | 16px (height; width follows brand aspect) |
+| `--meos-save-chip-gap` | — | 0.3125rem |
+
+**Not customisable:** font family, font size, label text, logo artwork, or chip colours outside the light/dark tokens.
+
+Live previews: [`theme-demo.html`](../examples/theme-demo.html), [`chip-preview.html`](../examples/chip-preview.html?theme=dark&preset=default).
 
 ### Build links without the widget
 
@@ -122,13 +180,14 @@ Self-hosting: run `npm run build:widget` and serve `dist/widget.iife.js` from yo
 
 | Wrong | Right |
 |-------|-------|
-| `MEOS`, `Save to MEOS` | `meos`, `save to meos` |
-| Custom colours, fonts, or label on the chip | Use the packaged chip as-is |
+| `MEOS`, `Save in MEOS` | `meos`, `save in meos` |
+| Custom fonts, label, or logo on the chip | Use the packaged chip; bounded `chip` + `theme` only |
+| Overriding `.meos-save-chip` colours/fonts | `theme: "light" \| "dark" \| "auto"` or host CSS vars for size/shape |
 
 - Inconsolata is **bundled** in the package (OFL-1.1)
 - Import `@meoslabs/save-in-meos/widget.css` only when composing markup yourself
 - Do **not** add Google Fonts `<link>` tags
-- Do **not** override `.meos-save-chip` styles — use `initSaveButton` on an empty mount
+- Do **not** override `.meos-save-chip` font, label, logo, or colours — use `theme` / `chip` / host CSS vars instead
 
 ---
 

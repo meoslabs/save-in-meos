@@ -26,7 +26,7 @@ const REQUIRED_FONT_FILES = [
 const SCAN_DIRS = ["src", "examples"] as const
 const CDN_PATTERNS = [/fonts\.googleapis\.com/i, /fonts\.gstatic\.com/i] as const
 
-const DEFAULT_LABEL = "save to meos"
+const DEFAULT_LABEL = "save in meos"
 
 const REQUIRED_CHIP_CLASSES = [
   ".meos-save-chip",
@@ -35,24 +35,27 @@ const REQUIRED_CHIP_CLASSES = [
 ] as const
 
 const REQUIRED_DIMENSION_TOKENS = [
-  "min-height: 30px",
-  "max-height: 32px",
-  "height: 31px",
+  "--meos-save-chip-height",
+  "--meos-save-chip-padding-x",
+  "--meos-save-chip-radius",
+  "--meos-save-icon-size",
+  "data-meos-theme",
   "font-size: 11px",
   "display: inline-flex",
   "pointer-events: auto",
-  "meos-save-chip--spin",
-  "prefers-reduced-motion: reduce",
+  "shape-rendering: geometricPrecision",
 ] as const
 
-const FORBIDDEN_STYLE_HOOKS = [
-  /--meos-save-fg/,
-  /--meos-save-border/,
-  /--meos-save-hover/,
+const BRANDING_LOGO_SVG = "assets/branding/meos-logo-charcoal-nostroke.svg"
+const EXPECTED_ICON_VIEWBOX = "0 0 27.275015 30.362297"
+
+const FORBIDDEN_API_HOOKS = [
   /label\?:/,
   /className\?:/,
   /style\?:/,
-  /theme\?:/,
+  /fontFamily\?:/,
+  /fontSize\?:/,
+  /spin\?:/,
 ] as const
 
 function fail(message: string): void {
@@ -90,11 +93,6 @@ function assertCssRules(rel: string, content: string): void {
   for (const token of REQUIRED_DIMENSION_TOKENS) {
     if (!content.includes(token)) {
       fail(`${rel}: missing required dimension rule "${token}"`)
-    }
-  }
-  for (const pattern of FORBIDDEN_STYLE_HOOKS) {
-    if (pattern.test(content)) {
-      fail(`${rel}: forbidden integrator style hook matching ${pattern}`)
     }
   }
 }
@@ -157,6 +155,31 @@ if (!stylesTs) {
   }
 }
 
+// ── Logo SVG SSOT sync ────────────────────────────────────────────────────────
+const brandingSvg = read(BRANDING_LOGO_SVG)
+const iconTs = read("src/widget/icon.ts")
+if (!brandingSvg) {
+  fail(`Missing ${BRANDING_LOGO_SVG} (vend from meos-workshop/shared/branding/)`)
+} else if (!iconTs) {
+  fail("Missing src/widget/icon.ts")
+} else {
+  const svgPath = brandingSvg.match(/\sd="([^"]+)"/)?.[1]
+  const inlinePath = iconTs.match(/MEOS_LOGO_PATH\s*=\s*\n\s*"([^"]+)"/)?.[1]
+  if (!svgPath) {
+    fail(`${BRANDING_LOGO_SVG}: could not extract path d= attribute`)
+  } else if (!inlinePath) {
+    fail("src/widget/icon.ts: could not extract MEOS_LOGO_PATH")
+  } else if (svgPath !== inlinePath) {
+    fail("src/widget/icon.ts: MEOS_LOGO_PATH drifted from assets/branding SSOT")
+  }
+  if (!iconTs.includes(`MEOS_SAVE_ICON_VIEWBOX = "${EXPECTED_ICON_VIEWBOX}"`)) {
+    fail(`src/widget/icon.ts: viewBox must match ${BRANDING_LOGO_SVG}`)
+  }
+  if (!iconTs.includes('transform="${LOGO_TRANSFORM}"')) {
+    fail("src/widget/icon.ts: logo path must use LOGO_TRANSFORM on <g>")
+  }
+}
+
 // ── Widget API — fixed label, no style overrides ──────────────────────────────
 const widgetIndex = read("src/widget/index.ts")
 if (!widgetIndex) {
@@ -171,7 +194,7 @@ if (!widgetIndex) {
   if (!widgetIndex.includes("meos-save-chip")) {
     fail("src/widget/index.ts: must use fixed class meos-save-chip")
   }
-  for (const pattern of FORBIDDEN_STYLE_HOOKS) {
+  for (const pattern of FORBIDDEN_API_HOOKS) {
     if (pattern.test(widgetIndex)) {
       fail(`src/widget/index.ts: forbidden public API hook matching ${pattern}`)
     }
@@ -182,11 +205,20 @@ if (!widgetIndex) {
   if (optionsIface && /\blabel\??\s*:/.test(optionsIface)) {
     fail("src/widget/index.ts: SaveButtonOptions must not expose label override")
   }
-  if (!/\bspin\??\s*:\s*boolean/.test(widgetIndex)) {
-    fail("src/widget/index.ts: SaveButtonOptions must expose optional spin toggle")
+  if (optionsIface && /\bspin\??\s*:/.test(optionsIface)) {
+    fail("src/widget/index.ts: SaveButtonOptions must not expose spin (logo is static)")
   }
-  if (!widgetIndex.includes("meos-save-chip--spin")) {
-    fail("src/widget/index.ts: must apply meos-save-chip--spin when spin is enabled")
+  if (!/\btheme\??\s*:\s*SaveChipTheme/.test(widgetIndex)) {
+    fail("src/widget/index.ts: SaveButtonOptions must expose theme (auto | light | dark)")
+  }
+  if (!/\bchip\??\s*:\s*SaveChipCustomisation/.test(widgetIndex)) {
+    fail("src/widget/index.ts: SaveButtonOptions must expose bounded chip customisation")
+  }
+  if (!/\bchipPreset\??\s*:\s*SaveChipPreset/.test(widgetIndex)) {
+    fail("src/widget/index.ts: SaveButtonOptions must expose chipPreset (default | comfortable | compact)")
+  }
+  if (!widgetIndex.includes("applyChipPresentation")) {
+    fail("src/widget/index.ts: must apply theme via applyChipPresentation (data-meos-theme)")
   }
 }
 
@@ -235,7 +267,7 @@ if (!demoHtml) {
   if (/\bMEOS\b/.test(demoHtml)) {
     fail('examples/demo.html: user-facing copy must be lowercase "meos", not "MEOS"')
   }
-  if (/Save to [Mm]eos/.test(demoHtml) && !demoHtml.includes(DEFAULT_LABEL)) {
+  if (/Save in [Mm]eos/.test(demoHtml) && !demoHtml.includes(DEFAULT_LABEL)) {
     fail(`examples/demo.html: use "${DEFAULT_LABEL}" not title-case variant`)
   }
 }

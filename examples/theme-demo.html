@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>save to meos — light / dark preview</title>
+    <title>save in meos — theme + chip presets</title>
     <link rel="stylesheet" href="./vendor/fonts.css" />
     <style>
       body {
@@ -17,8 +17,9 @@
         font-weight: 500;
         font-size: 1.25rem;
       }
-      p {
-        max-width: 42rem;
+      p,
+      .hint {
+        max-width: 44rem;
         opacity: 0.85;
       }
       .grid {
@@ -31,7 +32,7 @@
       figure {
         margin: 0;
         border: 1px solid rgba(127, 127, 127, 0.35);
-        border-radius: var(--meos-radius, 0);
+        border-radius: var(--meos-radius, 2px);
         overflow: hidden;
       }
       figcaption {
@@ -42,48 +43,121 @@
       iframe {
         display: block;
         width: 100%;
-        height: 120px;
+        height: 88px;
         border: 0;
+        background: transparent;
       }
-      .hint {
+      .custom {
+        margin-top: 2rem;
+        max-width: 56rem;
+      }
+      .custom-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1rem;
         margin-top: 1rem;
-        font-size: 0.75rem;
-        opacity: 0.7;
-        max-width: 42rem;
+      }
+      code {
+        font-size: 0.85em;
       }
       a {
         color: inherit;
       }
+      table {
+        border-collapse: collapse;
+        font-size: 0.85rem;
+        margin-top: 0.75rem;
+      }
+      th,
+      td {
+        border: 1px solid rgba(127, 127, 127, 0.35);
+        padding: 0.35rem 0.55rem;
+        text-align: left;
+      }
     </style>
   </head>
   <body>
-    <h1>Widget — light and dark</h1>
+    <h1>save in meos — theme + chip presets</h1>
     <p>
-      The chip adapts to <code>prefers-color-scheme</code> automatically. Integrators
-      cannot override chip colours — branding is fixed inside a closed shadow root.
-      Your page background can use any theme; the chip tracks the user&rsquo;s OS
-      preference.
+      Pin <code>theme: &quot;light&quot; | &quot;dark&quot; | &quot;auto&quot;</code>
+      when your page palette differs from the OS. Label, font, and logo path are fixed —
+      use <code>chipPreset</code> or bounded <code>chip</code> for size only.
     </p>
+
     <div class="grid">
       <figure>
-        <figcaption>Light (<code>color-scheme: light</code>)</figcaption>
-        <iframe
-          title="save to meos chip — light"
-          src="chip-preview.html?scheme=light"
-        ></iframe>
+        <figcaption>Light page (<code>theme: &quot;light&quot;</code>)</figcaption>
+        <iframe title="chip light" src="chip-preview.html?theme=light&preset=default"></iframe>
       </figure>
       <figure>
-        <figcaption>Dark (<code>color-scheme: dark</code>)</figcaption>
-        <iframe
-          title="save to meos chip — dark"
-          src="chip-preview.html?scheme=dark"
-        ></iframe>
+        <figcaption>Dark page (<code>theme: &quot;dark&quot;</code>)</figcaption>
+        <iframe title="chip dark" src="chip-preview.html?theme=dark&preset=default"></iframe>
+      </figure>
+      <figure>
+        <figcaption>Auto (<code>theme: &quot;auto&quot;</code>)</figcaption>
+        <iframe title="chip auto" src="chip-preview.html?theme=auto&preset=default"></iframe>
       </figure>
     </div>
+
+    <section class="custom">
+      <h2>Chip presets (<code>chipPreset</code>)</h2>
+      <p class="hint">
+        All presets show the meos logo + <strong>save in meos</strong> label. Logo mark
+        height defaults to <strong>16px</strong> (brand aspect ratio, vector SVG).
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Preset</th>
+            <th>When to use</th>
+            <th>Height / padding / radius</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>default</code></td>
+            <td>Share rows (Twitter/X-style)</td>
+            <td>31px / 10px / 2px</td>
+          </tr>
+          <tr>
+            <td><code>comfortable</code></td>
+            <td>Hero, footer, larger tap target</td>
+            <td>38px / 14px / 8px</td>
+          </tr>
+          <tr>
+            <td><code>compact</code></td>
+            <td>Dense toolbars — logo + label, tight</td>
+            <td>28px / 8px / 2px</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="custom-grid">
+        <figure>
+          <figcaption><code>chipPreset: &quot;default&quot;</code></figcaption>
+          <iframe title="default preset" src="chip-preview.html?theme=light&preset=default"></iframe>
+        </figure>
+        <figure>
+          <figcaption><code>chipPreset: &quot;comfortable&quot;</code></figcaption>
+          <iframe
+            title="comfortable preset"
+            src="chip-preview.html?theme=light&preset=comfortable"
+          ></iframe>
+        </figure>
+        <figure>
+          <figcaption><code>chipPreset: &quot;compact&quot;</code></figcaption>
+          <iframe
+            title="compact preset"
+            src="chip-preview.html?theme=light&preset=compact"
+          ></iframe>
+        </figure>
+      </div>
+    </section>
+
     <p class="hint">
       Run <code>npm run demo</code> first (stages <code>examples/vendor/</code>).
-      Also see <a href="demo.html?local=1">demo.html?local=1</a> — toggle your OS
-      dark mode to see the chip follow on a full page.
+      Docs: <a href="../README.md">README</a>,
+      <a href="../docs/INTEGRATOR.md">INTEGRATOR.md</a>.
+      Full embed: <a href="demo.html?local=1">demo.html?local=1</a>.
     </p>
   </body>
 </html>

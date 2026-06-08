@@ -10,6 +10,7 @@ import {
   decodeMeosLink,
   parseWidgetAttribution,
 } from "../import-intent-v1.js"
+import { SAVE_CHIP_HOST_VARS } from "./chip-theme.js"
 import { buildSaveChipMarkup, initSaveButton } from "./index.js"
 
 /** Injected at build time from package.json semver. */
@@ -32,6 +33,7 @@ export {
   buildImportIntentV1,
   decodeMeosLink,
   parseWidgetAttribution,
+  SAVE_CHIP_HOST_VARS,
 }
 
 export const version: string =

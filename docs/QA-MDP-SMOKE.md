@@ -27,7 +27,7 @@ npm run check:public-scrub
 
 1. `npm run build && npm run build:widget`
 2. Open `examples/demo.html` in Chrome and Safari (or `npx serve examples`)
-3. Click **save to meos** — URL must be `https://meos.do/databox:import:…`
+3. Click **save in meos** — URL must be `https://meos.do/databox:import:…`
 4. Confirm chip uses bundled font (no network request to `fonts.googleapis.com`)
 5. Toggle light/dark mode — chip stays monochrome B/W
 
