@@ -1,6 +1,6 @@
 {
   "name": "@meoslabs/save-in-meos",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "meos deeplink protocol (MDP) codec and save-in-meos embed widget for third-party sites",
   "repository": {
     "type": "git",
@@ -49,6 +49,7 @@
     "src/widget/fonts.css",
     "src/widget/widget.css",
     "assets/fonts/",
+    "assets/preview/",
     "LICENSE",
     "README.md"
   ],

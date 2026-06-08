@@ -4,6 +4,59 @@
 
 Let visitors save a page (or a quote from it) into [meos](https://meos.do) with one tap. This package builds canonical import URLs and ships a branded, self-contained button you can drop into any site — via npm, a script tag, or programmatic imports only.
 
+## Widget preview
+
+Static SVG previews of the branded chip (regenerated from widget SSOT on `npm run build:widget`). The live widget matches these presets — closed shadow DOM, Inconsolata, vector meos mark.
+
+<!-- CDN_PREVIEW: pin @VERSION when cutting a release -->
+<table>
+  <thead>
+    <tr>
+      <th></th>
+      <th><code>default</code> — save in meos</th>
+      <th><code>compact</code> — save</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>light</strong></td>
+      <td align="center">
+        <img
+          src="https://unpkg.com/@meoslabs/save-in-meos@0.0.2/assets/preview/chip-default-light.svg"
+          alt="save in meos chip — default preset, light theme"
+          height="55"
+        />
+      </td>
+      <td align="center">
+        <img
+          src="https://unpkg.com/@meoslabs/save-in-meos@0.0.2/assets/preview/chip-compact-light.svg"
+          alt="save chip — compact preset, light theme"
+          height="52"
+        />
+      </td>
+    </tr>
+    <tr>
+      <td><strong>dark</strong></td>
+      <td align="center">
+        <img
+          src="https://unpkg.com/@meoslabs/save-in-meos@0.0.2/assets/preview/chip-default-dark.svg"
+          alt="save in meos chip — default preset, dark theme"
+          height="55"
+        />
+      </td>
+      <td align="center">
+        <img
+          src="https://unpkg.com/@meoslabs/save-in-meos@0.0.2/assets/preview/chip-compact-dark.svg"
+          alt="save chip — compact preset, dark theme"
+          height="52"
+        />
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+Preview assets also ship in-repo at [`assets/preview/`](assets/preview/) and on [jsDelivr](https://cdn.jsdelivr.net/npm/@meoslabs/save-in-meos@0.0.2/assets/preview/chip-default-light.svg).
+
 ## How to integrate
 
 | Use case | How |
@@ -90,9 +143,9 @@ initSaveButton("#meos-save-mount", {
 ## Quick start — script tag
 
 ```html
-<link rel="stylesheet" href="https://unpkg.com/@meoslabs/save-in-meos@0.0.1/src/widget/fonts.css" />
+<link rel="stylesheet" href="https://unpkg.com/@meoslabs/save-in-meos@0.0.2/src/widget/fonts.css" />
 <div id="meos-save-mount"></div>
-<script src="https://unpkg.com/@meoslabs/save-in-meos@0.0.1/dist/widget.iife.js"></script>
+<script src="https://unpkg.com/@meoslabs/save-in-meos@0.0.2/dist/widget.iife.js"></script>
 <script>
   MeosSave.initSaveButton("#meos-save-mount", {
     u: location.href,

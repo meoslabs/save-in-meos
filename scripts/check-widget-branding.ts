@@ -258,6 +258,30 @@ for (const dir of SCAN_DIRS) {
   }
 }
 
+// ── README preview assets (static SVG — GitHub cannot run widget JS) ─────────
+const PREVIEW_FILES = [
+  "assets/preview/chip-default-light.svg",
+  "assets/preview/chip-default-dark.svg",
+  "assets/preview/chip-compact-light.svg",
+  "assets/preview/chip-compact-dark.svg",
+] as const
+
+for (const rel of PREVIEW_FILES) {
+  if (!read(rel)) {
+    fail(`Missing ${rel} — run npm run build:widget`)
+  }
+}
+
+const readme = read("README.md")
+if (readme) {
+  for (const rel of PREVIEW_FILES) {
+    const name = path.basename(rel)
+    if (!readme.includes(name)) {
+      fail(`README.md: must embed preview asset ${name} (CDN or relative)`)
+    }
+  }
+}
+
 // ── Default label lowercase ───────────────────────────────────────────────────
 const demoHtml = read("examples/demo.html")
 if (!demoHtml) {

@@ -7,6 +7,7 @@
  * GUARDED: check-ci-workflows.ts expects this script and output paths.
  */
 import esbuild from "esbuild"
+import { spawnSync } from "node:child_process"
 import fs from "node:fs"
 import path from "node:path"
 import { runInNewContext } from "node:vm"
@@ -100,6 +101,18 @@ function assertIifeGlobalFlat(): void {
 
 assertIifeGlobalFlat()
 
+const preview = spawnSync(
+  process.execPath,
+  [
+    path.join(ROOT, "node_modules", "tsx", "dist", "cli.mjs"),
+    path.join(ROOT, "scripts", "render-readme-previews.ts"),
+  ],
+  { cwd: ROOT, stdio: "inherit" },
+)
+if (preview.status !== 0) {
+  process.exit(preview.status ?? 1)
+}
+
 console.log(
-  `build:widget OK — widget.iife.js (${bytes} bytes), save-in-meos.min.js alias, widget.iife.css, examples/vendor/`,
+  `build:widget OK — widget.iife.js (${bytes} bytes), save-in-meos.min.js alias, widget.iife.css, examples/vendor/, readme previews`,
 )
