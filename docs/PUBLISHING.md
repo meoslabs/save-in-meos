@@ -27,14 +27,21 @@ How maintainers ship npm releases and CDN mirrors for integrators.
 
 First publish of a scoped package requires `--access public` (included in CI and examples below).
 
-### Path A — manual first publish (simplest)
+### Path A — manual first publish (**required once**)
+
+npm **cannot** attach Trusted Publishing until the package exists on the registry.
+The first version must be published manually; CI/OIDC handles every release after
+trusted publisher is linked.
 
 ```bash
-npm login
-npm run build && npm run build:widget
-npm test && npm run check:mdp && npm run check:public-scrub
-npm publish --access public
+npm login                    # meoslabs org member, 2FA on
+npm run prepublishOnly
+npm publish --access public --provenance=false
+# If the meoslabs org defaults scoped packages to private, also run:
+npm access set status=public @meoslabs/save-in-meos
 ```
+
+Do **not** use `--provenance` on the bootstrap publish — provenance is CI/OIDC only.
 
 Smoke-test CDN after a few minutes:
 
@@ -62,7 +69,9 @@ Open in browser and confirm `typeof MeosSave.initSaveButton === "function"` (not
 | Workflow filename | `release.yml` |
 | Environment | *(leave blank)* |
 
-4. Package name: `@meoslabs/save-in-meos` (can be configured **before** the first publish).
+4. Open **@meoslabs/save-in-meos** → **Settings** → **Trusted Publisher** → add the GitHub Actions connection above.
+
+**Prerequisite:** Path A bootstrap publish must have run first (package must exist).
 
 No automation token. No GitHub secret. The workflow uses `id-token: write` + `npm publish --provenance --access public`.
 
