@@ -28,6 +28,7 @@ export const MEOS_SAVE_LABEL_CLASS = "meos-save-chip__label" as const
 
 const STYLE_TAG_ID = "meos-save-widget-styles"
 const SHADOW_HOST_ATTR = "data-meos-save-host"
+const WIRE_CLICK_ABORT = Symbol("meos-wire-click-abort")
 
 let stylesInjected = false
 
@@ -66,8 +67,20 @@ function applyBrandedChip(button: HTMLButtonElement, spin = true): void {
   button.innerHTML = buildSaveChipMarkup()
 }
 
+function shadowHostButton(host: HTMLElement): HTMLButtonElement | null {
+  const button = host.shadowRoot?.querySelector("button")
+  return button instanceof HTMLButtonElement ? button : null
+}
+
 function mountInShadowHost(host: HTMLElement, options: SaveButtonOptions): HTMLButtonElement {
   host.setAttribute(SHADOW_HOST_ATTR, "")
+  const existing = shadowHostButton(host)
+  if (existing) {
+    applyBrandedChip(existing, options.spin !== false)
+    wireClick(existing, options, true)
+    return existing
+  }
+
   const shadow = host.attachShadow({ mode: "closed" })
   const style = document.createElement("style")
   style.textContent = MEOS_SAVE_WIDGET_CSS
@@ -79,22 +92,47 @@ function mountInShadowHost(host: HTMLElement, options: SaveButtonOptions): HTMLB
   return button
 }
 
-function wireClick(button: HTMLElement, options: SaveButtonOptions): void {
-  button.addEventListener("click", (event) => {
-    event.preventDefault()
-    const pageUrl =
-      options.u || (typeof location !== "undefined" ? location.href : "")
-    const intent = buildImportIntentV1({
-      u: pageUrl,
-      t: options.t ?? getSelectionText(),
-      images: options.images,
-      blocks: options.blocks,
-    })
-    const href = buildMeosLink(intent, options.widgetId)
-    if (typeof location !== "undefined") {
-      location.href = href
-    }
-  })
+function wireClick(
+  button: HTMLElement,
+  options: SaveButtonOptions,
+  replace = false,
+): void {
+  const host = button as HTMLElement & { [WIRE_CLICK_ABORT]?: AbortController }
+  if (replace && host[WIRE_CLICK_ABORT]) {
+    host[WIRE_CLICK_ABORT].abort()
+  }
+
+  const ac = new AbortController()
+  host[WIRE_CLICK_ABORT] = ac
+
+  let capturedSelection: string | undefined
+  button.addEventListener(
+    "pointerdown",
+    () => {
+      capturedSelection = getSelectionText()
+    },
+    { signal: ac.signal },
+  )
+
+  button.addEventListener(
+    "click",
+    (event) => {
+      event.preventDefault()
+      const pageUrl =
+        options.u || (typeof location !== "undefined" ? location.href : "")
+      const intent = buildImportIntentV1({
+        u: pageUrl,
+        t: options.t ?? capturedSelection ?? getSelectionText(),
+        images: options.images,
+        blocks: options.blocks,
+      })
+      const href = buildMeosLink(intent, options.widgetId)
+      if (typeof location !== "undefined") {
+        location.href = href
+      }
+    },
+    { signal: ac.signal },
+  )
 }
 
 /**
@@ -116,7 +154,7 @@ export function initSaveButton(
 
   if (!el) return null
 
-  if (isEmptyMount(el)) {
+  if (isEmptyMount(el) || el.hasAttribute(SHADOW_HOST_ATTR)) {
     return mountInShadowHost(el, options)
   }
 
@@ -135,7 +173,7 @@ export function initSaveButton(
   }
 
   applyBrandedChip(button, options.spin !== false)
-  wireClick(button, options)
+  wireClick(button, options, true)
   return button
 }
 
