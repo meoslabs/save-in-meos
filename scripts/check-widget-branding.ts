@@ -27,6 +27,7 @@ const SCAN_DIRS = ["src", "examples"] as const
 const CDN_PATTERNS = [/fonts\.googleapis\.com/i, /fonts\.gstatic\.com/i] as const
 
 const DEFAULT_LABEL = "save in meos"
+const COMPACT_LABEL = "save"
 
 const REQUIRED_CHIP_CLASSES = [
   ".meos-save-chip",
@@ -188,6 +189,12 @@ if (!widgetIndex) {
   if (!widgetIndex.includes(`MEOS_SAVE_LABEL = "${DEFAULT_LABEL}"`)) {
     fail(`src/widget/index.ts: MEOS_SAVE_LABEL must be exactly "${DEFAULT_LABEL}"`)
   }
+  if (!widgetIndex.includes(`MEOS_SAVE_COMPACT_LABEL = "${COMPACT_LABEL}"`)) {
+    fail(`src/widget/index.ts: MEOS_SAVE_COMPACT_LABEL must be exactly "${COMPACT_LABEL}"`)
+  }
+  if (!widgetIndex.includes("resolveChipLabel")) {
+    fail("src/widget/index.ts: compact preset must use resolveChipLabel")
+  }
   if (!widgetIndex.includes("attachShadow")) {
     fail("src/widget/index.ts: empty mounts must use closed shadow DOM")
   }
@@ -215,7 +222,10 @@ if (!widgetIndex) {
     fail("src/widget/index.ts: SaveButtonOptions must expose bounded chip customisation")
   }
   if (!/\bchipPreset\??\s*:\s*SaveChipPreset/.test(widgetIndex)) {
-    fail("src/widget/index.ts: SaveButtonOptions must expose chipPreset (default | comfortable | compact)")
+    fail("src/widget/index.ts: SaveButtonOptions must expose chipPreset (default | compact)")
+  }
+  if (widgetIndex.includes("comfortable")) {
+    fail("src/widget/index.ts: comfortable preset was removed — use default or compact")
   }
   if (!widgetIndex.includes("applyChipPresentation")) {
     fail("src/widget/index.ts: must apply theme via applyChipPresentation (data-meos-theme)")

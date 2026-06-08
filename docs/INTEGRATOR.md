@@ -49,7 +49,7 @@ initSaveButton("#meos-save-mount", {
 })
 ```
 
-The chip label is fixed at **save in meos** — there is no `label` option. Font and logo path are not customisable. The logo is **vector SVG** (`meos-logo-charcoal-nostroke`) at **16px mark height** by default.
+The default chip label is **save in meos**. The only shorter variant is `chipPreset: "compact"` → visible **save** (logo + save). There is no arbitrary `label` option. Font and logo path are not customisable. Logo is **vector SVG** at **16px** mark height.
 
 ### Theme (light / dark / auto)
 
@@ -65,22 +65,21 @@ initSaveButton("#meos-save-mount", {
 
 ### Chip presets (recommended)
 
-Prefer `chipPreset` over hand-rolled pixels. All presets render **meos logo + save in meos**.
-
-| Preset | Use when | Height | Padding X | Radius | Logo height |
-|--------|----------|--------|-----------|--------|-------------|
-| `default` | Share rows | 31px | 10px | 2px | 16px |
-| `comfortable` | Hero / footer | 38px | 14px | 8px | 16px |
-| `compact` | Dense toolbars | 28px | 8px | 2px | 16px |
+| Preset | Visible label | Use when | Height | Padding X | Radius |
+|--------|---------------|----------|--------|-----------|--------|
+| `default` | save in meos | Share rows | 31px | 10px | 2px |
+| `compact` | save | Dense toolbars | 28px | 8px | 2px |
 
 ```ts
 initSaveButton("#meos-save-mount", {
   u: location.href,
   widgetId: "my-widget",
-  chipPreset: "compact",
+  chipPreset: "compact", // logo + "save"
   theme: "dark",
 })
 ```
+
+`aria-label` remains **save in meos** on both presets.
 
 ### Bounded shape / size (advanced)
 
@@ -181,8 +180,8 @@ Self-hosting: run `npm run build:widget` and serve `dist/widget.iife.js` from yo
 | Wrong | Right |
 |-------|-------|
 | `MEOS`, `Save in MEOS` | `meos`, `save in meos` |
-| Custom fonts, label, or logo on the chip | Use the packaged chip; bounded `chip` + `theme` only |
-| Overriding `.meos-save-chip` colours/fonts | `theme: "light" \| "dark" \| "auto"` or host CSS vars for size/shape |
+| Custom fonts, arbitrary label, or logo | `chipPreset` + `theme` only |
+| `label: "Save to Meos"` | `default` or `compact` preset |
 
 - Inconsolata is **bundled** in the package (OFL-1.1)
 - Import `@meoslabs/save-in-meos/widget.css` only when composing markup yourself

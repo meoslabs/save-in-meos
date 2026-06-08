@@ -26,20 +26,21 @@ The **save in meos** chip uses a **closed shadow root**. Integrators cannot chan
 
 | Customisable | Fixed (brand) |
 |--------------|---------------|
-| `theme: "auto" \| "light" \| "dark"` | Label: **save in meos** |
-| `chipPreset: "default" \| "comfortable" \| "compact"` | Font family + weight |
-| Chip height (28–40px), padding, radius | Logo SVG path |
+| `theme: "auto" \| "light" \| "dark"` | Font family + weight |
+| `chipPreset: "default" \| "compact"` | Logo SVG path |
+| Chip height (28–40px), padding, radius | Arbitrary label text |
 | Logo mark height (11–16px) | Logo animation (static mark only) |
 
 ### Chip presets
 
-Use `chipPreset` for documented sizes. All presets show **meos logo + save in meos** — only spacing and tap target change.
+Two presets only — pick size and label together:
 
-| Preset | Use when | Height | Padding X | Radius | Logo height |
-|--------|----------|--------|-----------|--------|-------------|
-| `default` | Share rows (default) | 31px | 10px | 2px | 16px |
-| `comfortable` | Hero / footer / larger tap | 38px | 14px | 8px | 16px |
-| `compact` | Dense toolbars | 28px | 8px | 2px | 16px |
+| Preset | Visible label | Use when | Height | Padding X | Radius |
+|--------|---------------|----------|--------|-----------|--------|
+| `default` | **save in meos** | Share rows (default) | 31px | 10px | 2px |
+| `compact` | **save** | Dense toolbars | 28px | 8px | 2px |
+
+`aria-label` is always **save in meos** (accessibility). Only the visible chip text shortens on `compact`.
 
 ```ts
 initSaveButton("#meos-save-mount", {

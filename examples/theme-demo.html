@@ -43,17 +43,16 @@
       iframe {
         display: block;
         width: 100%;
-        height: 88px;
+        height: 72px;
         border: 0;
-        background: transparent;
       }
       .custom {
         margin-top: 2rem;
         max-width: 56rem;
       }
-      .custom-grid {
+      .preset-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
         gap: 1rem;
         margin-top: 1rem;
       }
@@ -80,17 +79,18 @@
     <h1>save in meos — theme + chip presets</h1>
     <p>
       Pin <code>theme: &quot;light&quot; | &quot;dark&quot; | &quot;auto&quot;</code>
-      when your page palette differs from the OS. Label, font, and logo path are fixed —
-      use <code>chipPreset</code> or bounded <code>chip</code> for size only.
+      when your page palette differs from the OS. Use <code>chipPreset</code> for
+      size — <code>compact</code> shows logo + <strong>save</strong>;
+      <code>default</code> shows logo + <strong>save in meos</strong>.
     </p>
 
     <div class="grid">
       <figure>
-        <figcaption>Light page (<code>theme: &quot;light&quot;</code>)</figcaption>
+        <figcaption>Light (<code>theme: &quot;light&quot;</code>)</figcaption>
         <iframe title="chip light" src="chip-preview.html?theme=light&preset=default"></iframe>
       </figure>
       <figure>
-        <figcaption>Dark page (<code>theme: &quot;dark&quot;</code>)</figcaption>
+        <figcaption>Dark (<code>theme: &quot;dark&quot;</code>)</figcaption>
         <iframe title="chip dark" src="chip-preview.html?theme=dark&preset=default"></iframe>
       </figure>
       <figure>
@@ -100,55 +100,36 @@
     </div>
 
     <section class="custom">
-      <h2>Chip presets (<code>chipPreset</code>)</h2>
-      <p class="hint">
-        All presets show the meos logo + <strong>save in meos</strong> label. Logo mark
-        height defaults to <strong>16px</strong> (brand aspect ratio, vector SVG).
-      </p>
+      <h2>Chip presets</h2>
       <table>
         <thead>
           <tr>
             <th>Preset</th>
+            <th>Visible label</th>
             <th>When to use</th>
-            <th>Height / padding / radius</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td><code>default</code></td>
-            <td>Share rows (Twitter/X-style)</td>
-            <td>31px / 10px / 2px</td>
-          </tr>
-          <tr>
-            <td><code>comfortable</code></td>
-            <td>Hero, footer, larger tap target</td>
-            <td>38px / 14px / 8px</td>
+            <td>save in meos</td>
+            <td>Share rows beside post / copy link</td>
           </tr>
           <tr>
             <td><code>compact</code></td>
-            <td>Dense toolbars — logo + label, tight</td>
-            <td>28px / 8px / 2px</td>
+            <td>save</td>
+            <td>Dense toolbars — logo + short label</td>
           </tr>
         </tbody>
       </table>
-      <div class="custom-grid">
+      <div class="preset-grid">
         <figure>
           <figcaption><code>chipPreset: &quot;default&quot;</code></figcaption>
           <iframe title="default preset" src="chip-preview.html?theme=light&preset=default"></iframe>
         </figure>
         <figure>
-          <figcaption><code>chipPreset: &quot;comfortable&quot;</code></figcaption>
-          <iframe
-            title="comfortable preset"
-            src="chip-preview.html?theme=light&preset=comfortable"
-          ></iframe>
-        </figure>
-        <figure>
-          <figcaption><code>chipPreset: &quot;compact&quot;</code></figcaption>
-          <iframe
-            title="compact preset"
-            src="chip-preview.html?theme=light&preset=compact"
-          ></iframe>
+          <figcaption><code>chipPreset: &quot;compact&quot;</code> — logo + save</figcaption>
+          <iframe title="compact preset" src="chip-preview.html?theme=light&preset=compact"></iframe>
         </figure>
       </div>
     </section>

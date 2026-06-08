@@ -11,8 +11,8 @@ export const MEOS_SAVE_ICON_ASPECT = 27.275015 / 30.362297
 /** Follow OS preference, or pin light/dark regardless of prefers-color-scheme. */
 export type SaveChipTheme = "auto" | "light" | "dark"
 
-/** Named size presets — logo + fixed label; only shape/spacing differ. */
-export type SaveChipPreset = "default" | "comfortable" | "compact"
+/** Named chip presets — `default` (full label) or `compact` (logo + save). */
+export type SaveChipPreset = "default" | "compact"
 
 /**
  * Bounded shape/size tweaks. Font family and logo artwork stay fixed.
@@ -33,11 +33,9 @@ export interface SaveChipCustomisation {
 export const SAVE_CHIP_PRESETS: Readonly<
   Record<SaveChipPreset, Readonly<SaveChipCustomisation>>
 > = {
-  /** Share-row default — logo-forward at 16px mark height. */
+  /** Share-row default — meos logo + save in meos. */
   default: { height: 31, paddingX: 10, radius: 2, iconSize: 16 },
-  /** Larger tap target + pill radius for hero / footer placements. */
-  comfortable: { height: 38, paddingX: 14, radius: 8, iconSize: 16 },
-  /** Tight chip — meos logo + save in meos label, minimal padding. */
+  /** Dense toolbar — meos logo + save (short label). */
   compact: { height: 28, paddingX: 8, radius: 2, iconSize: 16 },
 } as const
 
@@ -57,6 +55,11 @@ const ICON = { min: 11, max: 16, default: 16 } as const
 
 function clamp(n: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, n))
+}
+
+/** Visible chip copy for a preset (compact uses short label). */
+export function resolveChipLabel(preset?: SaveChipPreset): "save in meos" | "save" {
+  return preset === "compact" ? "save" : "save in meos"
 }
 
 /** Merge preset + explicit chip overrides (explicit wins). */

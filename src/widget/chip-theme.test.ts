@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest"
 import {
   resolveChipCustomisation,
   resolveChipCustomisationVars,
+  resolveChipLabel,
   SAVE_CHIP_PRESETS,
 } from "./chip-theme.js"
 
@@ -37,8 +38,19 @@ describe("resolveChipCustomisation", () => {
   })
 
   it("returns preset alone", () => {
-    expect(resolveChipCustomisation(undefined, "comfortable")).toEqual(
-      SAVE_CHIP_PRESETS.comfortable,
+    expect(resolveChipCustomisation(undefined, "default")).toEqual(
+      SAVE_CHIP_PRESETS.default,
     )
+  })
+})
+
+describe("resolveChipLabel", () => {
+  it("uses full label by default", () => {
+    expect(resolveChipLabel()).toBe("save in meos")
+    expect(resolveChipLabel("default")).toBe("save in meos")
+  })
+
+  it("uses short label for compact", () => {
+    expect(resolveChipLabel("compact")).toBe("save")
   })
 })

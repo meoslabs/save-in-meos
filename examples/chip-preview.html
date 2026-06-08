@@ -30,7 +30,7 @@
       }
       .row {
         display: flex;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
         align-items: center;
         gap: 0.5rem;
       }
@@ -81,7 +81,7 @@
         }
 
         var preset = params.get("preset")
-        if (preset === "default" || preset === "comfortable" || preset === "compact") {
+        if (preset === "default" || preset === "compact") {
           mountOpts.chipPreset = preset
         }
         if (Object.keys(chip).length > 0) mountOpts.chip = chip
