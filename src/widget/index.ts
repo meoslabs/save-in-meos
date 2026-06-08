@@ -20,7 +20,9 @@ import {
 import { buildSaveIconSvg } from "./icon.js"
 import { MEOS_SAVE_DOCUMENT_CSS, MEOS_SAVE_SHADOW_CSS } from "./styles.js"
 
-export interface SaveButtonOptions extends ImportIntentInput {
+export interface SaveButtonOptions extends Omit<ImportIntentInput, "u"> {
+  /** Canonical page URL; omit to use location.href at click time. */
+  u?: string
   widgetId?: string
   /**
    * `auto` follows OS dark mode; `light` / `dark` pin the chip palette.
@@ -164,9 +166,8 @@ function wireClick(
       event.preventDefault()
       try {
         const pageUrl =
-          typeof location !== "undefined"
-            ? location.href
-            : (options.u ?? "")
+          options.u ??
+          (typeof location !== "undefined" ? location.href : "")
         const intent = buildImportIntentV1({
           u: pageUrl,
           t: options.t ?? getSelectionText() ?? capturedSelection,
@@ -193,9 +194,7 @@ function wireClick(
  */
 export function initSaveButton(
   target: string | HTMLElement,
-  options: SaveButtonOptions = {
-    u: typeof location !== "undefined" ? location.href : "",
-  },
+  options: SaveButtonOptions = {},
 ): HTMLButtonElement | null {
   const el =
     typeof target === "string"
