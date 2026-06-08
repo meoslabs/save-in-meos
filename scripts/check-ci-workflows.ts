@@ -31,6 +31,12 @@ function requireContains(content: string, needle: string, label: string): void {
   }
 }
 
+function requireAbsent(content: string, needle: string, label: string): void {
+  if (content.includes(needle)) {
+    violations.push(`${label}: must not contain ${needle} (use OIDC trusted publishing)`)
+  }
+}
+
 const ci = requireFile("ci.yml")
 if (ci) {
   requireContains(ci, "npm ci", "ci.yml")
@@ -43,7 +49,12 @@ const release = requireFile("release.yml")
 if (release) {
   requireContains(release, "build:widget", "release.yml")
   requireContains(release, "npm publish", "release.yml")
-  requireContains(release, "NODE_AUTH_TOKEN", "release.yml")
+  requireContains(release, "id-token: write", "release.yml")
+  requireContains(release, "registry-url:", "release.yml")
+  requireContains(release, "--provenance", "release.yml")
+  requireContains(release, "--access public", "release.yml")
+  requireAbsent(release, "NODE_AUTH_TOKEN", "release.yml")
+  requireAbsent(release, "NPM_TOKEN", "release.yml")
 }
 
 if (violations.length > 0) {

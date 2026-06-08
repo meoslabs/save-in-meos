@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>save to meos — light / dark preview</title>
+    <link rel="stylesheet" href="./vendor/fonts.css" />
+    <style>
+      body {
+        font-family: var(--meos-font, ui-monospace, monospace);
+        margin: 0;
+        padding: 2rem;
+        line-height: 1.6;
+        color-scheme: light dark;
+      }
+      h1 {
+        font-weight: 500;
+        font-size: 1.25rem;
+      }
+      p {
+        max-width: 42rem;
+        opacity: 0.85;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1rem;
+        margin-top: 1.5rem;
+        max-width: 56rem;
+      }
+      figure {
+        margin: 0;
+        border: 1px solid rgba(127, 127, 127, 0.35);
+        border-radius: var(--meos-radius, 0);
+        overflow: hidden;
+      }
+      figcaption {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.75rem;
+        border-bottom: 1px solid rgba(127, 127, 127, 0.25);
+      }
+      iframe {
+        display: block;
+        width: 100%;
+        height: 120px;
+        border: 0;
+      }
+      .hint {
+        margin-top: 1rem;
+        font-size: 0.75rem;
+        opacity: 0.7;
+        max-width: 42rem;
+      }
+      a {
+        color: inherit;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Widget — light and dark</h1>
+    <p>
+      The chip adapts to <code>prefers-color-scheme</code> automatically. Integrators
+      cannot override chip colours — branding is fixed inside a closed shadow root.
+      Your page background can use any theme; the chip tracks the user&rsquo;s OS
+      preference.
+    </p>
+    <div class="grid">
+      <figure>
+        <figcaption>Light (<code>color-scheme: light</code>)</figcaption>
+        <iframe
+          title="save to meos chip — light"
+          src="chip-preview.html?scheme=light"
+        ></iframe>
+      </figure>
+      <figure>
+        <figcaption>Dark (<code>color-scheme: dark</code>)</figcaption>
+        <iframe
+          title="save to meos chip — dark"
+          src="chip-preview.html?scheme=dark"
+        ></iframe>
+      </figure>
+    </div>
+    <p class="hint">
+      Run <code>npm run demo</code> first (stages <code>examples/vendor/</code>).
+      Also see <a href="demo.html?local=1">demo.html?local=1</a> — toggle your OS
+      dark mode to see the chip follow on a full page.
+    </p>
+  </body>
+</html>

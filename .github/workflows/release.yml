@@ -1,6 +1,6 @@
 # WHY: Published npm tarball is the source of truth for unpkg/jsDelivr CDN mirrors.
-# WHAT: Build, verify, and npm publish on GitHub Release (or manual dispatch).
-# GUARDED: Requires NPM_TOKEN secret — see docs/PUBLISHING.md.
+# WHAT: Build, verify, and npm publish on GitHub Release via OIDC trusted publishing.
+# GUARDED: OIDC trusted publisher on npmjs.com — see docs/PUBLISHING.md.
 name: Release
 
 on:
@@ -11,11 +11,11 @@ on:
       dry_run:
         description: "Skip npm publish (build + verify only)"
         required: false
-        default: "false"
+        default: "true"
         type: choice
         options:
-          - "false"
           - "true"
+          - "false"
 
 jobs:
   publish:
@@ -50,8 +50,6 @@ jobs:
       - name: Unit tests
         run: npm test
 
-      - name: Publish to npm
-        if: github.event_name == 'release' || inputs.dry_run != 'true'
-        run: npm publish --access public --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Publish to npm (OIDC trusted publishing)
+        if: github.event_name == 'release' || (github.event_name == 'workflow_dispatch' && inputs.dry_run == 'false')
+        run: npm publish --provenance --access public

@@ -17,7 +17,7 @@ On desktop, users see the meos.do import preview (with QR). On mobile with the m
 | **npm / bundler** | `npm install @meos/save-in-meos` |
 | **Script tag (no build)** | Pin unpkg or jsDelivr URLs — [`examples/cdn-demo.html`](../examples/cdn-demo.html) |
 | **Programmatic only** | Import `buildMeosLink` / `buildImportIntentV1` — skip widget CSS |
-| **Try it** | Open [`examples/demo.html`](../examples/demo.html) (CDN) or `?local=1` after `npm run build:widget` |
+| **Try it** | `npm run demo` → [`examples/demo.html`](../examples/demo.html?local=1), [`theme-demo.html`](../examples/theme-demo.html) |
 
 ---
 

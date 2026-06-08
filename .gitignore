@@ -2,4 +2,5 @@
 *.debug.log
 coverage/
 dist/
+examples/vendor/
 node_modules/

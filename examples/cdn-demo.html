@@ -10,8 +10,21 @@
       href="https://unpkg.com/@meos/save-in-meos@0.0.1/src/widget/fonts.css"
     />
     <style>
+      :root {
+        color-scheme: light dark;
+        --page-bg: #fff;
+        --page-fg: #000;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --page-bg: #151515;
+          --page-fg: #fff;
+        }
+      }
       body {
         font-family: var(--meos-font, ui-monospace, monospace);
+        background: var(--page-bg);
+        color: var(--page-fg);
         margin: 2rem;
         line-height: 1.6;
       }

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>save to meos — chip preview</title>
+    <script>
+      ;(function () {
+        var scheme = new URLSearchParams(location.search).get("scheme") || "light"
+        document.documentElement.style.colorScheme = scheme
+      })()
+    </script>
+    <link rel="stylesheet" href="./vendor/fonts.css" />
+    <style>
+      :root {
+        color-scheme: light;
+        --page-bg: #ffffff;
+        --page-fg: #000000;
+      }
+      html[data-scheme="dark"],
+      html[style*="color-scheme: dark"] {
+        --page-bg: #151515;
+        --page-fg: #ffffff;
+      }
+      body {
+        font-family: var(--meos-font, ui-monospace, monospace);
+        background: var(--page-bg);
+        color: var(--page-fg);
+        margin: 0;
+        padding: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        box-sizing: border-box;
+      }
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .fake-share {
+        display: inline-flex;
+        align-items: center;
+        height: 34px;
+        padding: 0 0.75rem;
+        font-size: 12px;
+        border: 1px solid rgba(127, 127, 127, 0.35);
+        border-radius: var(--meos-radius, 0);
+        opacity: 0.55;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="row" aria-label="Share actions">
+      <span class="fake-share">post</span>
+      <span class="fake-share">copy link</span>
+      <div id="meos-save-mount"></div>
+    </div>
+    <script src="./vendor/widget.iife.js"></script>
+    <script>
+      MeosSave.initSaveButton("#meos-save-mount", {
+        u: "https://example.com/article",
+        widgetId: "theme-preview",
+      })
+    </script>
+  </body>
+</html>
