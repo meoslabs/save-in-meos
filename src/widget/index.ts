@@ -12,6 +12,7 @@ import {
 } from "../import-intent-v1.js"
 import {
   applyChipPresentation,
+  resolveChipLabel,
   type SaveChipCustomisation,
   type SaveChipPreset,
   type SaveChipTheme,
@@ -27,8 +28,8 @@ export interface SaveButtonOptions extends ImportIntentInput {
    */
   theme?: SaveChipTheme
   /**
-   * Named chip preset — `default`, `comfortable`, or `compact` (logo + save in meos).
-   * Explicit `chip` fields override preset values.
+   * `default` — logo + save in meos. `compact` — logo + save (short label).
+   * Explicit `chip` fields override preset dimensions.
    */
   chipPreset?: SaveChipPreset
   /**
@@ -46,8 +47,14 @@ export type {
   SaveChipPreset,
   SaveChipTheme,
 } from "./chip-theme.js"
-export { SAVE_CHIP_HOST_VARS, SAVE_CHIP_PRESETS } from "./chip-theme.js"
+export {
+  SAVE_CHIP_HOST_VARS,
+  SAVE_CHIP_PRESETS,
+  resolveChipLabel,
+} from "./chip-theme.js"
 export const MEOS_SAVE_LABEL = "save in meos" as const
+/** Visible label when `chipPreset: "compact"` — aria-label stays MEOS_SAVE_LABEL. */
+export const MEOS_SAVE_COMPACT_LABEL = "save" as const
 
 export const MEOS_SAVE_CHIP_CLASS = "meos-save-chip" as const
 export const MEOS_SAVE_ICON_CLASS = "meos-save-chip__icon" as const
@@ -60,11 +67,12 @@ const WIRE_CLICK_ABORT = Symbol("meos-wire-click-abort")
 let stylesInjected = false
 
 /**
- * Build inner HTML for the branded chip (icon + fixed label).
- * React hosts may compose this markup with widget.css — do not change classes.
+ * Build inner HTML for the branded chip (icon + label).
+ * Pass `chipPreset: "compact"` for the short **save** label.
  */
-export function buildSaveChipMarkup(): string {
-  return `${buildSaveIconSvg(MEOS_SAVE_ICON_CLASS)}<span class="${MEOS_SAVE_LABEL_CLASS}">${MEOS_SAVE_LABEL}</span>`
+export function buildSaveChipMarkup(preset?: SaveChipPreset): string {
+  const label = resolveChipLabel(preset)
+  return `${buildSaveIconSvg(MEOS_SAVE_ICON_CLASS)}<span class="${MEOS_SAVE_LABEL_CLASS}">${label}</span>`
 }
 
 /** Inject widget styles once at document level (npm hosts that import widget.css may skip). */
@@ -86,12 +94,15 @@ function isEmptyMount(el: HTMLElement): boolean {
   return el.childNodes.length === 0 && !el.textContent?.trim()
 }
 
-function applyBrandedChip(button: HTMLButtonElement): void {
+function applyBrandedChip(button: HTMLButtonElement, preset?: SaveChipPreset): void {
   button.type = "button"
   button.className = MEOS_SAVE_CHIP_CLASS
   button.setAttribute("data-meos-save", "")
   button.setAttribute("aria-label", MEOS_SAVE_LABEL)
-  button.innerHTML = buildSaveChipMarkup()
+  if (preset === "compact") {
+    button.setAttribute("data-meos-chip-preset", "compact")
+  }
+  button.innerHTML = buildSaveChipMarkup(preset)
 }
 
 function shadowHostButton(host: HTMLElement): HTMLButtonElement | null {
@@ -109,7 +120,7 @@ function mountInShadowHost(host: HTMLElement, options: SaveButtonOptions): HTMLB
   host.setAttribute(SHADOW_HOST_ATTR, "")
   const existing = shadowHostButton(host)
   if (existing) {
-    applyBrandedChip(existing)
+    applyBrandedChip(existing, options.chipPreset)
     wireClick(existing, options, true)
     return existing
   }
@@ -119,7 +130,7 @@ function mountInShadowHost(host: HTMLElement, options: SaveButtonOptions): HTMLB
   style.textContent = MEOS_SAVE_SHADOW_CSS
   shadow.appendChild(style)
   const button = document.createElement("button")
-  applyBrandedChip(button)
+  applyBrandedChip(button, options.chipPreset)
   shadow.appendChild(button)
   wireClick(button, options)
   return button
@@ -211,7 +222,7 @@ export function initSaveButton(
     el.appendChild(button)
   }
 
-  applyBrandedChip(button)
+  applyBrandedChip(button, options.chipPreset)
   applyChipPresentation(button, options.theme ?? "auto", options.chip, options.chipPreset)
   wireClick(button, options, true)
   return button
