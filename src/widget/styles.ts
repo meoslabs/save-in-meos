@@ -26,7 +26,7 @@ const CHIP_RULES = `
   color: var(--meos-save-fg, #000000);
   background: transparent;
   border: 1px solid var(--meos-save-border, rgba(0, 0, 0, 0.24));
-  border-radius: var(--meos-save-chip-radius, var(--meos-radius, 2px));
+  border-radius: var(--meos-save-chip-radius, 2px);
   cursor: pointer;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;

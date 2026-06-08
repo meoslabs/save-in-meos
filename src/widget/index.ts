@@ -169,7 +169,7 @@ function wireClick(
             : (options.u ?? "")
         const intent = buildImportIntentV1({
           u: pageUrl,
-          t: options.t ?? capturedSelection ?? getSelectionText(),
+          t: options.t ?? getSelectionText() ?? capturedSelection,
           images: options.images,
           blocks: options.blocks,
         })
