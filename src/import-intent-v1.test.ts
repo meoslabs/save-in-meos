@@ -149,3 +149,24 @@ describe("decodeMeosLink", () => {
     expect(decodeMeosLink(`${DATABOX_IMPORT_RESOURCE}:${encoded}`)).toEqual(intent)
   })
 })
+
+describe("wireToIntent decode guards", () => {
+  it("rejects invalid encoded blobs on decode", () => {
+    expect(() => decodeImportIntentV1("not-valid-blob")).toThrow()
+  })
+
+  it("strips extras from REF tier on decode via tier-specific fields only", () => {
+    const ref = buildImportIntentV1({ u: "https://example.com/ref-only" })
+    const encoded = encodeImportIntentV1(ref)
+    expect(decodeImportIntentV1(encoded)).toEqual(ref)
+    expect(decodeImportIntentV1(encoded).t).toBeUndefined()
+    expect(decodeImportIntentV1(encoded).images).toBeUndefined()
+  })
+})
+
+describe("buildMeosLink QR guard loop", () => {
+  it("throws when REF tier still exceeds maxUrlLength", () => {
+    const intent = buildImportIntentV1({ u: "https://example.com/a" })
+    expect(() => buildMeosLink(intent, "demo", { maxUrlLength: 40 })).toThrow(/maxUrlLength/)
+  })
+})

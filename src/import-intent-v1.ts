@@ -243,28 +243,49 @@ function wireToIntent(wire: WireImportIntentV1): ImportIntentV1 {
     throw new MdpDecodeError("Invalid schema: missing canonical URL (u)")
   }
 
+  try {
+    const parsed = new URL(wire.u)
+    if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+      throw new MdpDecodeError("Invalid schema: u must be an http(s) URL")
+    }
+  } catch (error) {
+    if (error instanceof MdpDecodeError) throw error
+    throw new MdpDecodeError("Invalid schema: u must be a valid URL")
+  }
+
   const tier = KIND_TO_TIER[wire.k]
   const intent: ImportIntentV1 = { v: 1, tier, u: wire.u }
 
-  if (wire.t) intent.t = wire.t
-  if (wire.imgs) intent.images = wire.imgs
-  if (wire.blocks) intent.blocks = wire.blocks
-
   switch (tier) {
     case "LITE":
-      if (!intent.t) {
+      if (!wire.t || typeof wire.t !== "string" || wire.t.trim().length === 0) {
         throw new MdpDecodeError("LITE tier requires quoted text (t)")
       }
+      intent.t = wire.t
       break
     case "IMG":
-      if (!intent.images || intent.images.length === 0) {
+      if (!wire.imgs || wire.imgs.length === 0) {
         throw new MdpDecodeError("IMG tier requires image URLs (imgs)")
       }
+      for (const imageUrl of wire.imgs) {
+        try {
+          const parsed = new URL(imageUrl)
+          if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+            throw new MdpDecodeError("Invalid schema: imgs[] must be http(s) URLs")
+          }
+        } catch (error) {
+          if (error instanceof MdpDecodeError) throw error
+          throw new MdpDecodeError("Invalid schema: imgs[] must be valid URLs")
+        }
+      }
+      if (wire.t) intent.t = wire.t
+      intent.images = wire.imgs
       break
     case "FULL":
-      if (!intent.blocks || intent.blocks.length === 0) {
+      if (!wire.blocks || wire.blocks.length === 0) {
         throw new MdpDecodeError("FULL tier requires blocks")
       }
+      intent.blocks = wire.blocks
       break
     default:
       break
@@ -379,10 +400,18 @@ export function buildMeosLink(
     ...(intent.blocks !== undefined ? { blocks: intent.blocks } : {}),
   }
 
-  let url = assembleMeosUrl(encodeImportIntentV1(blobIntent), attribution)
+  let workingIntent = blobIntent
+  let url = assembleMeosUrl(encodeImportIntentV1(workingIntent), attribution)
 
-  if (url.length > maxUrlLength && intent.tier !== "REF") {
-    url = assembleMeosUrl(encodeImportIntentV1(toRefIntent(intent)), attribution)
+  while (url.length > maxUrlLength && workingIntent.tier !== "REF") {
+    workingIntent = toRefIntent(workingIntent)
+    url = assembleMeosUrl(encodeImportIntentV1(workingIntent), attribution)
+  }
+
+  if (url.length > maxUrlLength) {
+    throw new MdpEncodeError(
+      `URL exceeds maxUrlLength (${maxUrlLength}) even at REF tier — shorten canonical URL (u)`,
+    )
   }
 
   return url
