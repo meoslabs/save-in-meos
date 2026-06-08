@@ -10,7 +10,6 @@ Branch: `feat/save-in-meos`. Canonical import URL:
 | `/link`, `/link/*` | Nexus link screen | Browser / store funnel | meos.do SPA |
 | `/databox:import*` | Share review overlay (MDP) | Install interstitial | Import frame + QR |
 | Other `/*:*` colon routes | Colon router / deeplink handler | Browser | meos.do SPA |
-| `https://usemeos.com/*` | Android App Links (broad) | Browser | SPA |
 
 SSOT: `MEOS_DO_DEEPLINK_MATRIX` in `@meos/core-logic/deeplinks/meosDoUniversalLinks.ts`.
 
