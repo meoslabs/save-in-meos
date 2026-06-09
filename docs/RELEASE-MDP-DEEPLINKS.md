@@ -25,7 +25,7 @@ meos registers `meos.do` for verified app opening:
 | Android | `https://meos.do/.well-known/assetlinks.json` |
 | iOS | `https://meos.do/.well-known/apple-app-site-association` |
 
-MDP import paths (`/databox:import*`) are included in app link coverage. Integrators do **not** host these files — they are maintained by meoslabs on meos.do.
+MDP import paths use colon grammar (`/databox:import:REF:…`). Apple AASA must use the substring wildcard `/databox:import*` — **not** `/databox:import/*` (slash wildcard never matches colon payloads). Android `pathPrefix` `/databox:import` already covers these. Integrators do **not** host these files — they are maintained by meoslabs on meos.do.
 
 ## Campaign attribution
 
