@@ -9,7 +9,7 @@
 
 <p align="center">
   <a
-    href="https://meos.do/databox:import:q1bKVrJSKlXSAWIrpYySkoJiK3399MySjNIkveT8XP3c1PzinMSkYv3ixLJU3cw8XZCAUi0A?w=github-readme"
+    href="https://meos.do/databox:import:q1bKVrJSKlXSAWIrpYySkoJiK3399MySjNIkveT8XP3c1PzinMSkYv3ixLJU3cw8XZCAUi0A?w=meoslabs"
     title="Try it — saves this repository into meos"
   >
     <img
@@ -21,7 +21,7 @@
 </p>
 
 <p align="center">
-  <strong>↑ Click the chip</strong> — opens a real <code>meos.do</code> import for this repo.<br />
+  <strong>↑ Click the chip</strong> — opens a real <code>meos.do</code> import for this repo. If pressed on mobile and meos is installed, it will open the app.<br />
   <a href="https://meoslabs.github.io/save-in-meos/readme-embed.html?w=github-readme"><strong>Live widget demo →</strong></a>
   &nbsp;·&nbsp;
   <a href="https://meoslabs.github.io/save-in-meos/">all interactive examples</a>
