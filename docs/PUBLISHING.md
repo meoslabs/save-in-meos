@@ -43,7 +43,8 @@ npm run check:version-pins # ratchet — also runs in pre-commit
 |---------|----------------|
 | `0.0.1` | First manual bootstrap publish |
 | `0.0.2` | Accidental empty publish during org visibility fix — **slot burned** on npm |
-| `0.0.3` | Current `latest` — readme preview SVGs, public package |
+| `0.0.3` | Readme preview SVGs, public package |
+| `0.0.4` | Current `latest` — canonical `u` option, npm consumers on `^0.0.4` |
 
 GitHub Releases `v0.0.1` / `v0.0.2` exist but CI publish failed (see OIDC below). **Trust npm `latest`, not orphan GitHub release tags.**
 
