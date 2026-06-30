@@ -43,6 +43,18 @@ export interface ImportIntentV1 {
   w?: string
   /** Optional PadSeed-shaped blocks (FULL tier). */
   blocks?: unknown[]
+  /**
+   * When false, consumer should not use relay-fetched page title (default true when absent).
+   * Wire key `ft` — omitted when true (default).
+   */
+  fetchTitle?: boolean
+  /** Integrator-supplied pad title — overrides relay title when set. Wire key `ttl`. */
+  title?: string
+  /**
+   * When true, consumer should queue AI title refine on first save (default false when absent).
+   * Wire key `rt` — omitted when false (default).
+   */
+  regenerateTitle?: boolean
 }
 
 /** Input for automatic tier selection before building an intent. */
@@ -51,6 +63,9 @@ export interface ImportIntentInput {
   t?: string
   images?: string[]
   blocks?: unknown[]
+  fetchTitle?: boolean
+  title?: string
+  regenerateTitle?: boolean
 }
 
 /** Optimised on-wire schema (short keys, omit defaults). */
@@ -60,6 +75,12 @@ interface WireImportIntentV1 {
   t?: string
   imgs?: string[]
   blocks?: unknown[]
+  /** fetchTitle — omitted when true (default). */
+  ft?: boolean
+  /** integrator title */
+  ttl?: string
+  /** regenerateTitle — omitted when false (default). */
+  rt?: boolean
 }
 
 export class MdpEncodeError extends Error {
@@ -177,6 +198,20 @@ function assertUrl(value: string, field: string): void {
   }
 }
 
+function validateTitleFlags(intent: ImportIntentV1): void {
+  if (intent.fetchTitle !== undefined && typeof intent.fetchTitle !== "boolean") {
+    throw new MdpEncodeError("fetchTitle must be a boolean when set")
+  }
+  if (intent.regenerateTitle !== undefined && typeof intent.regenerateTitle !== "boolean") {
+    throw new MdpEncodeError("regenerateTitle must be a boolean when set")
+  }
+  if (intent.title !== undefined) {
+    if (typeof intent.title !== "string" || intent.title.trim().length === 0) {
+      throw new MdpEncodeError("title must be a non-empty string when set")
+    }
+  }
+}
+
 function validateIntent(intent: ImportIntentV1): void {
   if (intent.v !== 1) {
     throw new MdpEncodeError(`Unsupported schema version: ${intent.v}`)
@@ -185,6 +220,7 @@ function validateIntent(intent: ImportIntentV1): void {
     throw new MdpEncodeError("Intent requires canonical URL (u)")
   }
   assertUrl(intent.u, "u")
+  validateTitleFlags(intent)
 
   switch (intent.tier) {
     case "REF":
@@ -212,6 +248,18 @@ function validateIntent(intent: ImportIntentV1): void {
   }
 }
 
+function intentTitleFlagsToWire(intent: ImportIntentV1, wire: WireImportIntentV1): void {
+  if (intent.fetchTitle === false) wire.ft = false
+  if (intent.title) wire.ttl = intent.title
+  if (intent.regenerateTitle === true) wire.rt = true
+}
+
+function intentTitleFlagsFromWire(wire: WireImportIntentV1, intent: ImportIntentV1): void {
+  if (wire.ft === false) intent.fetchTitle = false
+  if (wire.ttl) intent.title = wire.ttl
+  if (wire.rt === true) intent.regenerateTitle = true
+}
+
 function intentToWire(intent: ImportIntentV1): WireImportIntentV1 {
   const k = TIER_TO_KIND[intent.tier]
   const wire: WireImportIntentV1 = { k, u: intent.u }
@@ -226,6 +274,8 @@ function intentToWire(intent: ImportIntentV1): WireImportIntentV1 {
   if (intent.tier === "FULL" && intent.blocks) {
     wire.blocks = intent.blocks
   }
+
+  intentTitleFlagsToWire(intent, wire)
 
   return wire
 }
@@ -289,6 +339,8 @@ function wireToIntent(wire: WireImportIntentV1): ImportIntentV1 {
       break
   }
 
+  intentTitleFlagsFromWire(wire, intent)
+
   return intent
 }
 
@@ -314,6 +366,10 @@ export function buildImportIntentV1(input: ImportIntentInput): ImportIntentV1 {
     if (input.images) intent.images = input.images
   }
   if (tier === "FULL" && input.blocks) intent.blocks = input.blocks
+
+  if (input.fetchTitle === false) intent.fetchTitle = false
+  if (input.title) intent.title = input.title
+  if (input.regenerateTitle === true) intent.regenerateTitle = true
 
   return intent
 }
@@ -366,8 +422,19 @@ function assembleMeosUrl(encoded: string, widgetId?: string): string {
   return `${base}?w=${encodeURIComponent(widgetId)}`
 }
 
+function copyIntentTitleFlags(intent: ImportIntentV1): Pick<
+  ImportIntentV1,
+  "fetchTitle" | "title" | "regenerateTitle"
+> {
+  return {
+    ...(intent.fetchTitle === false ? { fetchTitle: false } : {}),
+    ...(intent.title !== undefined ? { title: intent.title } : {}),
+    ...(intent.regenerateTitle === true ? { regenerateTitle: true } : {}),
+  }
+}
+
 function toRefIntent(intent: ImportIntentV1): ImportIntentV1 {
-  return { v: 1, tier: "REF", u: intent.u }
+  return { v: 1, tier: "REF", u: intent.u, ...copyIntentTitleFlags(intent) }
 }
 
 function toLiteIntent(intent: ImportIntentV1): ImportIntentV1 {
@@ -375,7 +442,7 @@ function toLiteIntent(intent: ImportIntentV1): ImportIntentV1 {
   if (!quoted) {
     throw new MdpEncodeError("LITE tier requires quoted text (t)")
   }
-  return { v: 1, tier: "LITE", u: intent.u, t: quoted }
+  return { v: 1, tier: "LITE", u: intent.u, t: quoted, ...copyIntentTitleFlags(intent) }
 }
 
 /** Step down one tier for QR guard — IMG/FULL try LITE (keep quote) before REF. */
@@ -411,6 +478,7 @@ export function buildMeosLink(
     ...(intent.t !== undefined ? { t: intent.t } : {}),
     ...(intent.images !== undefined ? { images: intent.images } : {}),
     ...(intent.blocks !== undefined ? { blocks: intent.blocks } : {}),
+    ...copyIntentTitleFlags(intent),
   }
 
   let workingIntent = blobIntent

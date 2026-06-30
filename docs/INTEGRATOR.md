@@ -167,10 +167,10 @@ No npm or bundler required. Pin the package version — never use `@latest` in p
 ```html
 <link
   rel="stylesheet"
-  href="https://unpkg.com/@meoslabs/save-in-meos@0.0.5/src/widget/fonts.css"
+  href="https://unpkg.com/@meoslabs/save-in-meos@0.0.6/src/widget/fonts.css"
 />
 <div id="meos-save-mount"></div>
-<script src="https://unpkg.com/@meoslabs/save-in-meos@0.0.5/dist/widget.iife.js"></script>
+<script src="https://unpkg.com/@meoslabs/save-in-meos@0.0.6/dist/widget.iife.js"></script>
 <script>
   MeosSave.initSaveButton("#meos-save-mount", {
     u: location.href,
@@ -182,7 +182,7 @@ No npm or bundler required. Pin the package version — never use `@latest` in p
 **jsDelivr:**
 
 ```
-https://cdn.jsdelivr.net/npm/@meoslabs/save-in-meos@0.0.5/dist/widget.iife.js
+https://cdn.jsdelivr.net/npm/@meoslabs/save-in-meos@0.0.6/dist/widget.iife.js
 ```
 
 **Alias:** `dist/save-in-meos.min.js` (same minified bundle).
@@ -230,6 +230,38 @@ Self-hosting: run `npm run build:widget` and serve `dist/widget.iife.js` from yo
 | Attribution | `?w={widgetId}` |
 
 **REF** — URL only. **LITE** — URL + quoted text (`t`). **IMG** — URL + `images[]`. **FULL** — URL + optional `blocks[]`.
+
+### Title flags (v0.0.6+)
+
+Optional integrator hints for how meos should resolve the pad title on import. All fields are additive — links without them behave as before.
+
+| Logical field | Wire key | Type | Default when absent |
+|---------------|----------|------|---------------------|
+| `fetchTitle` | `ft` | `boolean?` | `true` — relay may fetch page title from `u` |
+| `title` | `ttl` | `string?` | none |
+| `regenerateTitle` | `rt` | `boolean?` | `false` — no forced AI title refine on save |
+
+Wire encoding omits defaults (`ft` when true, `rt` when false) to keep URLs compact.
+
+**Resolution rules** (applied by meos clients on MDP imports only — not OS share):
+
+1. If `title` is set → use it as the pad title (integrator wins; ignore relay title).
+2. Else if `fetchTitle` is `false` → leave pad title unset (avoid login-page junk from auth-gated URLs).
+3. Else (`fetchTitle` true or absent, no `title`) → keep relay-fetched page title (existing behaviour).
+4. If `regenerateTitle` is `true` → queue AI title refine on first save (LITE and FULL).
+5. If `title` is set and `regenerateTitle` is `false` or absent → treat title as integrator-fixed (skip forced refine).
+
+```ts
+const intent = buildImportIntentV1({
+  u: "https://app.example.com/journal/session/abc",
+  blocks: [{ type: "text", text: "Journal line one" }],
+  title: "Morning Sitting · Example",
+  fetchTitle: false,
+  regenerateTitle: true,
+})
+```
+
+Typical public-site integrators omit all three fields — `fetchTitle` defaults to true and relay Open Graph titles work as today.
 
 Widget attribution (`w`) is carried in the query string only; it is never embedded in the compressed payload.
 

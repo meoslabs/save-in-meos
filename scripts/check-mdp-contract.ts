@@ -53,7 +53,13 @@ function loadFixtures(): MdpFixture[] {
     .filter((f) => f.endsWith(".json"))
     .sort()
 
-  const pinned = ["ref-minimal.json", "lite-quote.json", "ref-with-widget.json"]
+  const pinned = [
+    "ref-minimal.json",
+    "lite-quote.json",
+    "ref-with-widget.json",
+    "lite-with-title-flags.json",
+    "full-blocks.json",
+  ]
   for (const name of pinned) {
     if (!files.includes(name)) {
       fail(`Missing pinned fixture: fixtures/mdp/${name}`)

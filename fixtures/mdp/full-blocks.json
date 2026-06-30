@@ -1,0 +1,20 @@
+{
+  "name": "full-blocks",
+  "description": "FULL tier — multi-block import with integrator title flags",
+  "intent": {
+    "v": 1,
+    "tier": "FULL",
+    "u": "https://app.enquicken.com/journal/session/abc",
+    "blocks": [
+      { "type": "text", "text": "First journal line" },
+      { "type": "text", "text": "Second journal line with elaboration." }
+    ],
+    "fetchTitle": false,
+    "title": "Morning Sitting · Enquicken",
+    "regenerateTitle": true
+  },
+  "widgetId": "enquicken-journal",
+  "expectedHost": "meos.do",
+  "expectedResource": "databox:import",
+  "maxUrlLength": 2048
+}
