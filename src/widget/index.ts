@@ -51,6 +51,7 @@ export {
   SAVE_CHIP_HOST_VARS,
   SAVE_CHIP_PRESETS,
   resolveChipLabel,
+  applyChipPresentation,
 } from "./chip-theme.js"
 export const MEOS_SAVE_LABEL = "save in meos" as const
 /** Visible label when `chipPreset: "compact"` — aria-label stays MEOS_SAVE_LABEL. */
