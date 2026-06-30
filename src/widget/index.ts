@@ -173,6 +173,9 @@ function wireClick(
           t: options.t ?? getSelectionText() ?? capturedSelection,
           images: options.images,
           blocks: options.blocks,
+          fetchTitle: options.fetchTitle,
+          title: options.title,
+          regenerateTitle: options.regenerateTitle,
         })
         const href = buildMeosLink(intent, options.widgetId)
         if (typeof location !== "undefined") {

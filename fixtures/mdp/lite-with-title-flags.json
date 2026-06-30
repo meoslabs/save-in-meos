@@ -1,0 +1,17 @@
+{
+  "name": "lite-with-title-flags",
+  "description": "LITE tier — quoted text with integrator title flags (ttl, ft, rt)",
+  "intent": {
+    "v": 1,
+    "tier": "LITE",
+    "u": "https://app.enquicken.com/journal/session/abc",
+    "t": "Body text from the journal sitting.",
+    "fetchTitle": false,
+    "title": "Morning Sitting · Enquicken",
+    "regenerateTitle": true
+  },
+  "widgetId": "enquicken-journal",
+  "expectedHost": "meos.do",
+  "expectedResource": "databox:import",
+  "maxUrlLength": 2048
+}

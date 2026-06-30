@@ -1,6 +1,8 @@
 #!/usr/bin/env sh
-# WHY: MDP contract + branding + types before commit.
+# WHY: MDP contract + branding + types + CI/CD ratchet before commit.
 # GUARDED: check-mdp-contract is BLOCKING (codec SSOT must not drift).
+#          check:ci is BLOCKING (CI/CD workflows are the publish lifeline —
+#          if they regress, npm + Pages + provenance silently break).
 
 set -e
 
@@ -12,6 +14,9 @@ npm run check:widget-branding
 
 echo "🔍 save-in-meos: typecheck..."
 npm run typecheck
+
+echo "🤖 save-in-meos: CI/CD workflow ratchet..."
+npm run check:ci
 
 echo "📌 save-in-meos: version pins..."
 npm run check:version-pins

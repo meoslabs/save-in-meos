@@ -53,6 +53,85 @@ describe("selectImportTier", () => {
   })
 })
 
+describe("buildImportIntentV1 title flags", () => {
+  it("passes integrator title flags through", () => {
+    const intent = buildImportIntentV1({
+      u: "https://app.enquicken.com/journal/session/abc",
+      t: "Quoted body text",
+      title: "Morning Sitting · Enquicken",
+      fetchTitle: false,
+      regenerateTitle: true,
+    })
+    expect(intent.tier).toBe("LITE")
+    expect(intent.title).toBe("Morning Sitting · Enquicken")
+    expect(intent.fetchTitle).toBe(false)
+    expect(intent.regenerateTitle).toBe(true)
+  })
+
+  it("omits default title flags on intent", () => {
+    const intent = buildImportIntentV1({ u: "https://example.com/article" })
+    expect(intent.fetchTitle).toBeUndefined()
+    expect(intent.title).toBeUndefined()
+    expect(intent.regenerateTitle).toBeUndefined()
+  })
+})
+
+describe("encodeImportIntentV1 / decodeImportIntentV1 title flags", () => {
+  const titleFlagsIntent = buildImportIntentV1({
+    u: "https://app.enquicken.com/journal/session/abc",
+    t: "Body text from the journal sitting.",
+    title: "Morning Sitting · Enquicken",
+    fetchTitle: false,
+    regenerateTitle: true,
+  })
+
+  it("roundtrips LITE with title flags", () => {
+    const encoded = encodeImportIntentV1(titleFlagsIntent)
+    expect(decodeImportIntentV1(encoded)).toEqual(titleFlagsIntent)
+  })
+
+  it("omits default wire keys (ft when true, rt when false)", () => {
+    const encoded = encodeImportIntentV1(
+      buildImportIntentV1({ u: "https://example.com/article" }),
+    )
+    const compressed = decodeImportIntentV1(encoded)
+    expect(compressed.fetchTitle).toBeUndefined()
+    expect(compressed.regenerateTitle).toBeUndefined()
+  })
+
+  it("roundtrips FULL with blocks and title flags", () => {
+    const intent = buildImportIntentV1({
+      u: "https://app.enquicken.com/journal/session/abc",
+      blocks: [
+        { type: "text", text: "First journal line" },
+        { type: "text", text: "Second journal line with elaboration." },
+      ],
+      title: "Morning Sitting · Enquicken",
+      fetchTitle: false,
+      regenerateTitle: true,
+    })
+    expect(intent.tier).toBe("FULL")
+    const encoded = encodeImportIntentV1(intent)
+    expect(decodeImportIntentV1(encoded)).toEqual(intent)
+  })
+
+  it("preserves title flags when QR guard degrades FULL to LITE", () => {
+    const intent = buildImportIntentV1({
+      u: "https://example.com/journal",
+      t: "Short quote",
+      blocks: [{ type: "text", text: "x".repeat(200) }],
+      title: "Session title",
+      fetchTitle: false,
+      regenerateTitle: true,
+    })
+    const url = buildMeosLink(intent, "demo", { maxUrlLength: 180 })
+    const decoded = decodeMeosLink(url)
+    expect(decoded.title).toBe("Session title")
+    expect(decoded.fetchTitle).toBe(false)
+    expect(decoded.regenerateTitle).toBe(true)
+  })
+})
+
 describe("encodeImportIntentV1 / decodeImportIntentV1", () => {
   const refIntent = buildImportIntentV1({ u: "https://example.com/article" })
   const liteIntent = buildImportIntentV1({
