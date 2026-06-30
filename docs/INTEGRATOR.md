@@ -167,10 +167,10 @@ No npm or bundler required. Pin the package version — never use `@latest` in p
 ```html
 <link
   rel="stylesheet"
-  href="https://unpkg.com/@meoslabs/save-in-meos@0.0.4/src/widget/fonts.css"
+  href="https://unpkg.com/@meoslabs/save-in-meos@0.0.5/src/widget/fonts.css"
 />
 <div id="meos-save-mount"></div>
-<script src="https://unpkg.com/@meoslabs/save-in-meos@0.0.4/dist/widget.iife.js"></script>
+<script src="https://unpkg.com/@meoslabs/save-in-meos@0.0.5/dist/widget.iife.js"></script>
 <script>
   MeosSave.initSaveButton("#meos-save-mount", {
     u: location.href,
@@ -182,7 +182,7 @@ No npm or bundler required. Pin the package version — never use `@latest` in p
 **jsDelivr:**
 
 ```
-https://cdn.jsdelivr.net/npm/@meoslabs/save-in-meos@0.0.4/dist/widget.iife.js
+https://cdn.jsdelivr.net/npm/@meoslabs/save-in-meos@0.0.5/dist/widget.iife.js
 ```
 
 **Alias:** `dist/save-in-meos.min.js` (same minified bundle).
