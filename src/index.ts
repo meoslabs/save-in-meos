@@ -37,6 +37,7 @@ export {
   SAVE_CHIP_HOST_VARS,
   SAVE_CHIP_PRESETS,
   resolveChipLabel,
+  applyChipPresentation,
   type SaveButtonOptions,
   type SaveChipCustomisation,
   type SaveChipPreset,
