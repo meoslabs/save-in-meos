@@ -1,0 +1,1 @@
+{"version":3,"file":"icon.js","sourceRoot":"","sources":["../../src/widget/icon.ts"],"names":[],"mappings":"AAAA;;;;;GAKG;AAEH,iFAAiF;AACjF,MAAM,CAAC,MAAM,sBAAsB,GAAG,yBAAyB,CAAA;AAE/D,qEAAqE;AACrE,MAAM,cAAc,GAClB,w/CAAw/C,CAAA;AAE1/C,MAAM,cAAc,GAAG,kCAAkC,CAAA;AAEzD,MAAM,UAAU,gBAAgB,CAAC,SAAiB;IAChD,OAAO,eAAe,SAAS,cAAc,sBAAsB,gIAAgI,cAAc,cAAc,cAAc,mCAAmC,CAAA;AAClR,CAAC"}
