@@ -37,6 +37,7 @@
     "./widget.iife.css": "./dist/widget.iife.css"
   },
   "files": [
+    "tsconfig.json",
     "dist/index.js",
     "dist/index.d.ts",
     "dist/import-intent-v1.js",

@@ -1,0 +1,8 @@
+/**
+ * WHY: Public entry for @meos/save-in-meos — mdp codec + widget initialisers.
+ * WHAT: Re-exports ImportIntentV1 types, codec functions, and widget API.
+ * WHERE: npm package root (`import from '@meos/save-in-meos'`).
+ */
+export { MDP_CONTRACT_VERSION, MEOS_DO_HOST, DATABOX_IMPORT_RESOURCE, MDP_MAX_QR_URL_LENGTH, MdpEncodeError, MdpDecodeError, encodeImportIntentV1, decodeImportIntentV1, buildImportIntentV1, selectImportTier, buildMeosLink, decodeMeosLink, parseWidgetAttribution, } from "./import-intent-v1.js";
+export { initSaveButton, ensureWidgetStyles, buildSaveChipMarkup, MEOS_SAVE_LABEL, MEOS_SAVE_COMPACT_LABEL, MEOS_SAVE_CHIP_CLASS, MEOS_SAVE_ICON_CLASS, MEOS_SAVE_LABEL_CLASS, SAVE_CHIP_HOST_VARS, SAVE_CHIP_PRESETS, resolveChipLabel, applyChipPresentation, } from "./widget/index.js";
+//# sourceMappingURL=index.js.map
